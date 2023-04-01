@@ -1,32 +1,30 @@
-
-name: Swift
+name: Build and Test IOS App
 
 on:
-  pull_request:
   push:
-    branches: [ "master" ]
+    branches: [ master ]
+  pull_request:
+    branches: [ '**' ]
 
 jobs:
- test:
-   name: Test
-   runs-on: macOS-latest
-   
-   strategy:
-       matrix:
-         destination: ['platform=iOS Simulator,name=iPhone 14']
-   env: 
-     destination: ${{ matrix.destination }}
-   
-   steps:
-     — uses: actions/checkout@v3
-     — name: Print Info
-       run: echo "The GitHub Actor's username is: $GITHUB_ACTOR"
-       
-     — name: Run build and test for CONSUMER_APP
-       run: xcodebuild -workspace Zveron.xcworkspace -scheme ConsumerApp test -destination "${destination}"
- 
-     — name: Run build and test for SPECIALIST_APP
-       run: xcodebuild -workspace Zveron.xcworkspace -scheme SpecialistApp test -destination "${destination}"
+  build:
+    name: Build and Test IOS App
+    runs-on: macos-latest
+    
+    strategy:
+      matrix:
+        destination: ['platform=iOS Simulator,name=iPhone 14']
+    env:
+      destination: ${{ matrix.destination }}
 
-        
-        
+    steps:
+      - name: Print info
+        run: |
+          echo "The GitHub Actor's username is: $GITHUB_ACTOR"
+          echo "GitHub SHA: $GITHUB_SHA"
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build and Test ConsumerApp
+        run: xcodebuild -workspace Zveron.xcworkspace -scheme ConsumerApp test -destination "$destination"
+      - name: Build and Test SpecialistApp
+        run: xcodebuild -workspace Zveron.xcworkspace -scheme SpecialistApp test -destination "$destination"
