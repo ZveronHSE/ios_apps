@@ -1,0 +1,16 @@
+disabled_rules:
+  - identifier_name
+  - trailing_whitespace
+  - function_body_length
+  
+opt_in_rules:
+  - trailing_whitespace
+  - closure_spacing
+  
+excluded:
+  - Pods
+
+warning_threshold: 500
+line_length: 180
+cyclomatic_complexity:
+ ignores_case_statements: true

@@ -1,0 +1,10 @@
+diff a/Platform/profile/ProfileDataSource.swift b/Platform/profile/ProfileDataSource.swift	(rejected hunks)
+@@ -31,7 +31,7 @@ public final class ProfileRemoteDataSource: ProfileDataSourceProtocol {
+                     id: $0.id,
+                     name: $0.name,
+                     surname: $0.surname,
+-                    imageId: $0.imageID,
++                    imageUrl: $0.imageURL,
+                     rating: $0.rating,
+                     address: Domain.Address.init(
+                         region: $0.address.region,

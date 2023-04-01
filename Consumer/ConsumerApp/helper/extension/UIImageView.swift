@@ -1,0 +1,17 @@
+//
+//  UIImageView.swift
+//  iosapp
+//
+//  Created by Никита Ткаченко on 19.05.2022.
+//
+
+import Foundation
+import UIKit
+
+extension UIImageView {
+    func setImageColor(color: UIColor) {
+        let templateImage = self.image?.withRenderingMode(.alwaysTemplate)
+        self.image = templateImage
+        self.tintColor = color
+    }
+}

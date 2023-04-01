@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:ZveronLibrary">
+   </FileRef>
+   <FileRef
+      location = "group:Consumer/Consumer.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Specialist/Specialist.xcodeproj">
+   </FileRef>
+</Workspace>

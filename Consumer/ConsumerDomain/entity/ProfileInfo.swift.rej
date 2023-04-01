@@ -1,0 +1,20 @@
+diff a/Domain/entity/ProfileInfo.swift b/Domain/entity/ProfileInfo.swift	(rejected hunks)
+@@ -10,15 +10,15 @@ public struct ProfileInfo {
+     public let id: UInt64
+     public let name: String
+     public let surname: String
+-    public let imageId: UInt64
++    public let imageUrl: String
+     public let rating: Double
+     public let address: Address
+     
+-    public init(id: UInt64, name: String, surname: String, imageId: UInt64, rating: Double, address: Address) {
++    public init(id: UInt64, name: String, surname: String, imageUrl: String, rating: Double, address: Address) {
+         self.id = id
+         self.name = name
+         self.surname = surname
+-        self.imageId = imageId
++        self.imageUrl = imageUrl
+         self.rating = rating
+         self.address = address
+     }

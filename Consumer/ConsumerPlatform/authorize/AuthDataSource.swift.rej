@@ -1,0 +1,10 @@
+diff a/Platform/authorize/AuthDataSource.swift b/Platform/authorize/AuthDataSource.swift	(rejected hunks)
+@@ -20,7 +20,7 @@ public final class AuthRemoteDataSource: AuthDataSourceProtocol {
+     }
+ 
+     public func loginBySocial(request: LoginBySocialRequest) -> Observable<MobileToken> {
+-        return apigateway.callWithRetry(returnType: MobileToken.self, requestBody: request, methodAlies: "")
++        return apigateway.callWithRetry(returnType: MobileToken.self, requestBody: request, methodAlies: "authLoginBySocialMedia")
+     }
+ 
+     public func loginByPassword(request: LoginByPasswordRequest) ->Observable<MobileToken> {

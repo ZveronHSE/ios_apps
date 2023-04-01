@@ -1,0 +1,10 @@
+diff a/iosapp/screen/profile/view/controller/mvvm/EditProfileViewController.swift b/iosapp/screen/profile/view/controller/mvvm/EditProfileViewController.swift	(rejected hunks)
+@@ -147,7 +147,7 @@ class EditProfileViewController: UIViewControllerWithAuth {
+                 id: self.profileInfo.id,
+                 name: self.textFieldName.text!,
+                 surname: self.textFieldSurname.text!,
+-                imageId: self.profileInfo.imageId,
++                imageUrl: self.profileInfo.imageUrl,
+                 rating: self.profileInfo.rating,
+                 address: Address.init (
+                     region: self.profileInfo.address.region,
