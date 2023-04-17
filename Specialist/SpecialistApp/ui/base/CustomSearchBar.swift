@@ -55,7 +55,6 @@ final class CustomSearchBar: UIView {
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-    // TODO: сделать покрасивше
     override func layoutSubviews() {
         super.layoutSubviews()
 
