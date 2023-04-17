@@ -10,7 +10,8 @@ import UIKit
 import SpecialistDomain
 import Kingfisher
 
-final class OrderCell: UICollectionViewCell {
+final class OrderPreviewCell: UICollectionViewCell, ReusableCell {
+    static var cellSize: CGSize = CGSize(width: 0, height: 130)
     public static let reuseID = "orderCell"
 
     private lazy var shadowView: UIView = {
@@ -37,104 +38,23 @@ final class OrderCell: UICollectionViewCell {
         return cornerView
     }()
 
-    private lazy var titleLabel: UILabel = {
-        let view = UILabel()
-        view.font = .zvMediumFootnote
-        view.textColor = .zvBlack
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var priceLabel: UILabel = {
-        let view = UILabel()
-        view.font = .zvMediumSubheadline
-        view.textColor = .zvBlack
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var cityLabel: UILabel = {
-        let view = UILabel()
-        view.font = .zvRegularCaption2
-        view.textColor = .zvBlack
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var metroStationLabel: UILabel = {
-        let view = UILabel()
-        view.font = .zvRegularCaption2
-        view.textColor = .zvBlack
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var orderPeriodLabel: UILabel = {
-        let view = UILabel()
-        view.font = .zvRegularCaption2
-        view.textColor = .zvGray2
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var animalNameLabel: UILabel = {
-        let view = UILabel()
-        view.font = .zvRegularCaption2
-        view.textColor = .zvGray2
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var animalDescriptionLabel: UILabel = {
-        let view = UILabel()
-        view.font = .zvRegularCaption3
-        view.textColor = .zvGray1
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var publishDateLabel: UILabel = {
-        let view = UILabel()
-        view.font = .zvRegularCaption3
-        view.textColor = .zvGray3
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var cityIcon: UIImageView = {
-        let view = UIImageView()
-        view.image = .zvTrello.withTintColor(.zvGray1)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var metroStationColor: UIView = {
-        let view = UIView()
-        view.clipsToBounds = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var orderPeriodIcon: UIImageView = {
-        let view = UIImageView()
-        view.image = .zvCalendar.withTintColor(.zvGray1)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var animalImage: UIImageView = {
-        let view = UIImageView()
-        view.contentMode = .scaleAspectFill
-        view.clipsToBounds = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        layout()
+    private let titleLabel: UILabel = createLabel(with: .zvBlack, and: .zvMediumFootnote)
+    private let priceLabel: UILabel = createLabel(with: .zvBlack, and: .zvMediumSubheadline)
+    private let cityLabel: UILabel = createLabel(with: .zvBlack, and: .zvRegularCaption2)
+    private let metroStationLabel: UILabel = createLabel(with: .zvBlack, and: .zvRegularCaption2)
+    private let orderPeriodLabel: UILabel = createLabel(with: .zvGray2, and: .zvRegularCaption2)
+    private let animalNameLabel: UILabel = createLabel(with: .zvGray2, and: .zvRegularCaption2)
+    private let animalDescriptionLabel: UILabel = createLabel(with: .zvGray1, and: .zvRegularCaption3)
+    private let publishDateLabel: UILabel = createLabel(with: .zvGray3, and: .zvRegularCaption3)
+    private let cityIcon: UIImageView = createView { $0.image = .zvTrello.withTintColor(.zvGray1) }
+    private let metroStationColor: UIView = createView { $0.clipsToBounds = true }
+    private let orderPeriodIcon: UIImageView = createView { $0.image = .zvCalendar.withTintColor(.zvGray1) }
+    private let animalImage: UIImageView = createView {
+        $0.contentMode = .scaleAspectFill
+        $0.clipsToBounds = true
     }
 
+    override init(frame: CGRect) { super.init(frame: frame); layout() }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     public func layout() {

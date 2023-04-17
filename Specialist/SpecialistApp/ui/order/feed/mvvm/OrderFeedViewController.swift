@@ -30,7 +30,7 @@ final class OrderFeedViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: self.flowLayout)
         view.backgroundColor = .clear
-        view.register(OrderCell.self, forCellWithReuseIdentifier: OrderCell.reuseID)
+        view.register(OrderPreviewCell.self)
         view.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 10, right: 0)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.delegate = self
@@ -75,10 +75,8 @@ final class OrderFeedViewController: UIViewController {
     private func bindView() {
         collectionView.rx.itemSelected.subscribe(onNext: { _ in
             let vc = OrderCardViewController()
-            // vc.setup(with: <#T##Order#>)
-            let navVC = UINavigationController(rootViewController: vc)
-            navVC.modalPresentationStyle = .fullScreen
-            self.present(navVC, animated: true)
+            vc.setup()
+            self.pushToRoot(vc: vc)
         }).disposed(by: dis)
     }
 }
@@ -187,8 +185,8 @@ extension OrderFeedViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OrderCell.reuseID, for: indexPath) as? OrderCell else { fatalError("") }
 
+        let cell: OrderPreviewCell = collectionView.createCell(by: indexPath)
         cell.setup(with: testData[indexPath.item])
 
         return cell
