@@ -15,6 +15,7 @@ import NIOHPACK
 import RxSwift
 import SwiftProtobuf
 import UIKit
+import OrderGRPC
 
 public class Apigateway {
     public init() { }
@@ -42,7 +43,9 @@ public class Apigateway {
         backgroundQueue.async {
 
             do {
-                print("Started request:\(methodAlies) with body:\n\(requestBody.debugDescription)")
+                print("Started request:\(methodAlies)")
+
+               // print("Started request:\(methodAlies) with body:\n\(requestBody.debugDescription)")
 
                 // try to open connection
                 let (connection, client) = try self.openConnection()
@@ -78,8 +81,9 @@ public class Apigateway {
                 // try to close connection
                 try self.closeConnection(connection)
 
-                print("Complete response:\(methodAlies) with body:\n\(responseBody.debugDescription)")
-                
+               // print("Complete response:\(methodAlies) with body:\n\(responseBody.debugDescription)")
+                print("Successful response:\(methodAlies)")
+
                 // call callback with response
                 DispatchQueue.main.async { completion(.success(responseBody)) }
             } catch {

@@ -9,8 +9,12 @@ import Foundation
 import UIKit
 import RxSwift
 import SpecialistDomain
+import RxDataSources
 
 final class OrderCustomerProfileController: UIViewController {
+    let disposeBag = DisposeBag()
+    private let backClickTrigger = PublishSubject<Void>()
+    private let sourceSelectTrigger = PublishSubject<ProfileFeedSource>()
 
     private lazy var flowLayout: UICollectionViewFlowLayout = {
         let view = UICollectionViewFlowLayout()
@@ -28,41 +32,42 @@ final class OrderCustomerProfileController: UIViewController {
         view.registerHeader(CustomerInfoHeader.self)
         view.registerHeader(FeedHeader.self)
 
-        // view.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 10, right: 0)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.delegate = self
-        view.dataSource = self
         return view
     }()
+
+    private lazy var emptyLabel: UILabel = createLabel(with: .zvGray1, and: .zvRegularBody) { $0.hide(animated: false) }
+    private let activityIndicator: UIActivityIndicatorView = createActivityIndicator()
 
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .zvBackground
         navigationItem.leftBarButtonItem = createNavigationButton(type: .back) { [weak self] in
-            self?.navigationController?.popViewController(animated: true)
+            self?.backClickTrigger.onNext(Void())
         }
-
-        navigationItem.rightBarButtonItem = createNavigationButton(type: .setting) { [weak self] in
-        }
+        navigationItem.title = "Профиль заказчика"
+        emptyLabel.text = "Нет активных заказов"
 
         layout()
-        bindViews()
     }
 
     private func layout() {
         view.addSubview(collectionView)
+        view.addSubview(emptyLabel)
+        view.addSubview(activityIndicator)
 
         collectionView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
         collectionView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         collectionView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    }
 
-    public func setup() {
-        navigationItem.title = "Профиль заказчика"
-    }
+        emptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        emptyLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: view.frame.height / 6).isActive = true
 
-    public func bindViews() {}
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
 }
 
 extension OrderCustomerProfileController: UICollectionViewDelegateFlowLayout {
@@ -102,120 +107,6 @@ extension OrderCustomerProfileController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-// TODO: Не забыть удалить когда будет подключение к беку
-extension OrderCustomerProfileController: UICollectionViewDataSource {
-    var testData: [OrderPreview] {
-        return [
-            OrderPreview(
-                title: "Стрижка кота",
-                price: "500 ₽",
-                city: "г. Москва",
-                metroStation: "Водный стадион",
-                metroColor: "#1FBF2F",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Томас",
-                animalDesciption: "Кот, Британец",
-                animalImageLink: "https://klike.net/uploads/posts/2019-06/medium/1561011184_2.jpg"
-            ),
-            OrderPreview(
-                title: "Стрижка cобаки",
-                price: "1000 ₽",
-                city: "г. Москва",
-                metroStation: "Пражская",
-                metroColor: "#808080",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Бобик",
-                animalDesciption: "Собака, маленький зверенок",
-                animalImageLink: "https://placepic.ru/wp-content/uploads/2019/06/7733.jpg"
-            ),
-            OrderPreview(
-                title: "Стрижка пиписьки",
-                price: "1000 ₽",
-                city: "г. Москва",
-                metroStation: "Пражская",
-                metroColor: "#808080",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Сучка",
-                animalDesciption: "Собака, реальная сучка",
-                animalImageLink: "https://placepic.ru/wp-content/uploads/2019/06/7733.jpg"
-            ),
-            OrderPreview(
-                title: "Стрижка собаки",
-                price: "1000 ₽",
-                city: "г. Москва",
-                metroStation: "Пражская",
-                metroColor: "#808080",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Сучка",
-                animalDesciption: "Собака, реальная сучка",
-                animalImageLink: "https://placepic.ru/wp-content/uploads/2019/06/7733.jpg"
-            ),
-            OrderPreview(
-                title: "Стрижка собаки",
-                price: "1000 ₽",
-                city: "г. Москва",
-                metroStation: "Пражская",
-                metroColor: "#808080",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Сучка",
-                animalDesciption: "Собака, реальная сучка",
-                animalImageLink: "https://placepic.ru/wp-content/uploads/2019/06/7733.jpg"
-            ),
-            OrderPreview(
-                title: "Стрижка собаки",
-                price: "1000 ₽",
-                city: "г. Москва",
-                metroStation: "Пражская",
-                metroColor: "#808080",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Сучка",
-                animalDesciption: "Собака, реальная сучка",
-                animalImageLink: "https://placepic.ru/wp-content/uploads/2019/06/7733.jpg"
-            )
-        ]
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch section {
-        case 0: return 0
-        case 1: return testData.count
-        default: break
-        }
-
-        return testData.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
-        switch SectionInfo(rawValue: indexPath.section)! {
-        case .feed:
-            let cell: OrderPreviewCell = collectionView.createCell(by: indexPath)
-            cell.setup(with: testData[indexPath.item])
-            return cell
-        default: fatalError("")
-        }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-
-        switch SectionInfo(rawValue: indexPath.section)! {
-        case .customerInfo:
-            let header: CustomerInfoHeader = collectionView.createHeader(by: indexPath)
-            header.setup()
-            return header
-        case .feed:
-            let header: FeedHeader = collectionView.createHeader(by: indexPath)
-            return header
-        }
-    }
-}
-
 private enum SectionInfo: Int, CaseIterable {
     case customerInfo
     case feed
@@ -243,13 +134,88 @@ private enum SectionInfo: Int, CaseIterable {
 
     func sectionType() -> ReusableCell.Type {
         switch self {
-        case .customerInfo: return EmptyCell.self
+        case .customerInfo: fatalError("this section does not hase a cell type")
         case .feed: return OrderPreviewCell.self
         }
     }
 }
 
-final class EmptyCell: UICollectionViewCell, ReusableCell {
-    static var reuseID: String = ""
-    static var cellSize: CGSize = .zero
+extension OrderCustomerProfileController: BindableView {
+
+    private func createInput() -> OrderCustomerProfileViewModel.Input {
+
+        let sourceSelectTrigger = self.sourceSelectTrigger.startWith(.actived).asDriverOnErrorJustComplete()
+        let itemSelectTrigger = self.collectionView.rx.itemSelected.asDriver()
+
+        return .init(
+            backClickTrigger: backClickTrigger.asDriverOnErrorJustComplete()
+                .debug("back click trigger", trimOutput: true),
+            sourceSelectTrigger: sourceSelectTrigger.debug("source select trigger", trimOutput: true),
+            itemSelectTrigger: itemSelectTrigger.debug("item select trigger", trimOutput: true)
+        )
+    }
+
+    func bind(to viewModel: OrderCustomerProfileViewModel) {
+        let input = createInput()
+        let output = viewModel.transform(input: input)
+
+        output.backClicked.drive().disposed(by: disposeBag)
+
+        output.items
+            .map { [.init(key: "emptySection", items: []), .init(key: "orderSection", items: $0)] }
+            .drive(collectionView.rx.items(dataSource: createDataSource(viewModel)))
+            .disposed(by: disposeBag)
+
+        output.items.delay(.milliseconds(1)).withLatestFrom(input.sourceSelectTrigger) { items, type in
+            return (items.isEmpty, type)
+        }.drive(onNext: { (isEmpty, type) in
+            if isEmpty {
+                self.emptyLabel.text = type == .actived ? "Нет активных заказов" : "Нет завершенных заказов"
+                self.emptyLabel.show(animated: true)
+            } else {
+                self.emptyLabel.hide(animated: true)
+            }
+
+        }).disposed(by: disposeBag)
+
+        output.itemSelected.drive().disposed(by: disposeBag)
+
+        output.activityIndicator.drive(onNext: { isActive in
+            if isActive {
+                self.activityIndicator.startAnimating()
+                self.activityIndicator.show(animated: true)
+            } else {
+                self.activityIndicator.hide(animated: true) { _ in self.activityIndicator.stopAnimating() }
+            }
+        }).disposed(by: disposeBag)
+
+        // TODO: Сделать обработку ошибок ui
+        output.errors.drive(onNext: { _ in
+        }).disposed(by: disposeBag)
+    }
+}
+
+// MARK: datasource
+extension OrderCustomerProfileController {
+    private func createDataSource(_ viewModel: OrderCustomerProfileViewModel) -> RxCollectionViewSectionedAnimatedDataSource<CustomSectionModel<OrderPreview>> {
+        return .init(
+            configureCell: { _, cv, indexPath, item in
+                let cell: OrderPreviewCell = cv.createCell(by: indexPath)
+                cell.setup(with: item)
+                return cell
+            },
+            configureSupplementaryView: { _, cv, _, indexPath in
+                switch SectionInfo(rawValue: indexPath.section)! {
+                case .customerInfo:
+                    let header: CustomerInfoHeader = cv.createHeader(by: indexPath)
+                    header.setup(with: viewModel.model)
+                    return header
+                case .feed:
+                    let header: FeedHeader = cv.createHeader(by: indexPath)
+                    header.selectFeedSourceTrigger.drive(self.sourceSelectTrigger).disposed(by: self.disposeBag)
+                    return header
+                }
+            }
+        )
+    }
 }

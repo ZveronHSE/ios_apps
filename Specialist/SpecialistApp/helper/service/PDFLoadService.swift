@@ -13,15 +13,15 @@ final class PDFLoadService: NSObject {
 
     public static let shared = PDFLoadService()
 
-    private var cache: [String: URL] = [:]
+    private var cache: [URL: URL] = [:]
 
     private override init() { }
 
-    public func loadPdf(from networkUrl: String) -> Observable<URL> {
+    public func loadPdf(from networkUrl: URL) -> Observable<URL> {
         Observable.create { [weak self] observer in
 
             self?.cache[networkUrl].flatMap { observer.onNext($0) } ??
-            self?.load(form: networkUrl) { [weak self] documentUrl, error in
+            self?.load(from: networkUrl) { [weak self] documentUrl, error in
                 if error == nil {
                     self?.cache[networkUrl] = documentUrl
                     observer.onNext(documentUrl!)
@@ -32,8 +32,8 @@ final class PDFLoadService: NSObject {
         }
     }
 
-    private func load(form networkUrl: String, _ callback: @escaping((URL?, Error?) -> Void)) {
-        guard let url = URL(string: networkUrl) else { return }
+    private func load(from networkUrl: URL, _ callback: @escaping((URL?, Error?) -> Void)) {
+        let url = networkUrl
 
         let urlSession = URLSession(configuration: .default)
 
@@ -44,8 +44,9 @@ final class PDFLoadService: NSObject {
             let destinationLocationDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
             let destinationLocation = destinationLocationDirectory.appendingPathComponent(fileName)
 
+            try? FileManager.default.removeItem(at: destinationLocation)
+
             do {
-                try FileManager.default.removeItem(at: destinationLocation)
                 try FileManager.default.copyItem(at: currentLocation!, to: destinationLocation)
                 DispatchQueue.main.async { callback(destinationLocation, nil) }
             } catch let error {

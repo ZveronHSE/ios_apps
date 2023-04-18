@@ -9,15 +9,21 @@ import Foundation
 import UIKit
 import Cosmos
 import SpecialistDomain
+import RxSwift
+import RxCocoa
 
 final class OrderCardViewController: UIViewController {
+    let disposeBag = DisposeBag()
+    private let backClickTrigger = PublishSubject<Void>()
+    private let animalProfileClickTrigger = PublishSubject<Void>()
+    private let customerProfileClickTrigger = PublishSubject<Void>()
 
     private let scrollView: UIScrollView = createView {
-        $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
+        $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 70, right: 0)
     }
 
     private let continueButton: UIButton = createButton {
-        $0.setTitleColor(.white, for: .normal)
+        $0.setTitleColor(.zvWhite, for: .normal)
         $0.titleLabel?.font = .zvRegularSubheadline
         $0.backgroundColor = .zvRedMain
         $0.layer.cornerRadius = 10
@@ -31,12 +37,14 @@ final class OrderCardViewController: UIViewController {
     private let animalView: AnimalView = createView()
     private let profileView: ProfileView = createView()
     private let descriptionView: HeaderAndTitleView = createView()
+    private let similarOrdersView: SimilarOrdersView = createView()
+    private let activityIndicator: UIActivityIndicatorView = createActivityIndicator()
 
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .zvBackground
         navigationItem.leftBarButtonItem = createNavigationButton(type: .back) { [weak self] in
-            self?.popFromRoot()
+            self?.backClickTrigger.onNext(Void())
         }
 
         layoutScrollView()
@@ -47,6 +55,7 @@ final class OrderCardViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         view.addSubview(continueButton)
+        view.addSubview(activityIndicator)
 
         scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         scrollView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
@@ -62,6 +71,9 @@ final class OrderCardViewController: UIViewController {
         continueButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         continueButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -46).isActive = true
         continueButton.heightAnchor.constraint(equalToConstant: 52).isActive = true
+
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
 
     private func layoutContentView() {
@@ -74,6 +86,7 @@ final class OrderCardViewController: UIViewController {
         contentView.addSubview(animalView)
         contentView.addSubview(profileView)
         contentView.addSubview(descriptionView)
+        contentView.addSubview(similarOrdersView)
 
         headerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24).isActive = true
         headerView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: paddings.left).isActive = true
@@ -103,33 +116,31 @@ final class OrderCardViewController: UIViewController {
         descriptionView.topAnchor.constraint(equalTo: animalView.bottomAnchor, constant: 16).isActive = true
         descriptionView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: paddings.left).isActive = true
         descriptionView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: paddings.right).isActive = true
-        descriptionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+
+        similarOrdersView.topAnchor.constraint(equalTo: descriptionView.bottomAnchor, constant: 40).isActive = true
+        similarOrdersView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
+        similarOrdersView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
+        similarOrdersView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
 
-    public func setup() {
-        navigationItem.title = "Стрижка"
-        continueButton.setTitle("Показать объявления", for: .normal)
-
-        headerView.setup()
-        addressView.setup()
-        serviceDateView.setup(with: "Дата оказания услуги", and: "27.12.2022")
-        serviceTimeView.setup(with: "Дата оказания услуги", and: "13:00 - 21:00")
+    public func setup(with model: Order) {
+        navigationItem.title = model.title
+        continueButton.setTitle("Откликнуться", for: .normal)
+        headerView.setup(with: model.title, and: model.price, and: model.createdDate)
+        addressView.setup(with: model.address)
+        serviceDateView.setup(with: "Дата оказания услуги", and: model.serviceDate)
+        serviceTimeView.setup(with: "Время оказания услуги", and: model.serviceTime)
         animalView.setup(
-            onClick: { [weak self] in
-                let nextVC = OrderAnimalProfileController()
-                nextVC.setup()
-                self?.navigationController?.pushViewController(nextVC, animated: true)
-            }
+            model: model.animalPreview,
+            onClick: { [weak self] in self?.animalProfileClickTrigger.onNext(Void()) }
         )
         profileView.setup(
-            onClick: { [weak self] in
-                let nextVC = OrderCustomerProfileController()
-                nextVC.setup()
-                self?.navigationController?.pushViewController(nextVC, animated: true)
-            }
+            model: model.customerPreview,
+            onClick: { [weak self] in self?.customerProfileClickTrigger.onNext(Void()) }
         )
-        descriptionView.setup(with: "Описание", and: "Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса Необходимо выполнить стрижку кота Томаса")
-        // continueButton.
+        descriptionView.setup(with: "Описание", and: model.description)
+        similarOrdersView.setup(with: model.similarOrders)
+        model.availableResponse ? continueButton.enable(animated: false) : continueButton.disable(animated: false)
     }
 }
 
@@ -160,10 +171,10 @@ fileprivate final class HeaderView: UIView {
         publishDateLabel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     }
 
-    public func setup() {
-        titleLabel.text = "Cтрижка кота"
-        priceLabel.text = "500$"
-        publishDateLabel.text = "Сегодня 9:43"
+    public func setup(with title: String, and price: String, and createdDate: String) {
+        titleLabel.text = title
+        priceLabel.text = price
+        publishDateLabel.text = createdDate
     }
 }
 
@@ -201,11 +212,11 @@ fileprivate final class AddressView: UIView {
         metroStationLabel.leftAnchor.constraint(equalTo: metroStationColor.rightAnchor, constant: 4).isActive = true
     }
 
-    public func setup() {
+    public func setup(with model: OrderAddress) {
         titleLabel.text = "Адрес"
-        cityLabel.text = "г. Москва"
-        metroStationColor.backgroundColor = UIColor(hexString: "#F1B223")
-        metroStationLabel.text = "Водный стадион"
+        cityLabel.text = model.town
+        metroStationColor.backgroundColor = UIColor(hexString: model.color)
+        metroStationLabel.text = model.station
     }
 }
 
@@ -236,9 +247,9 @@ fileprivate final class AnimalView: UIView {
         cardView.heightAnchor.constraint(equalToConstant: 64).isActive = true
     }
 
-    public func setup(onClick clickClosure: @escaping (() -> Void)) {
+    public func setup(model: OrderAnimalPreview, onClick clickClosure: @escaping (() -> Void)) {
         titleLabel.text = "Питомец"
-        cardView.setup(onClick: clickClosure)
+        cardView.setup(model: model, onClick: clickClosure)
     }
 
     private final class AnimalCardView: ShadowCardView {
@@ -247,8 +258,14 @@ fileprivate final class AnimalView: UIView {
             $0.clipsToBounds = true
             $0.contentMode = .scaleAspectFill
         }
-        private let nameLabel: UILabel = createLabel(with: .zvGray2, and: .zvMediumFootnote)
-        private let descriptionLabel: UILabel = createLabel(with: .zvGray1, and: .zvRegularCaption2)
+        private let nameLabel: UILabel = createLabel(with: .zvGray2, and: .zvMediumFootnote) {
+            $0.textAlignment = .left
+            $0.lineBreakMode = .byTruncatingTail
+        }
+        private let descriptionLabel: UILabel = createLabel(with: .zvGray1, and: .zvRegularCaption2) {
+            $0.textAlignment = .left
+            $0.lineBreakMode = .byTruncatingTail
+        }
 
         init() { super.init(with: .init(cornerRadius: 8, shadowRadius: 4)); layout() }
 
@@ -268,15 +285,16 @@ fileprivate final class AnimalView: UIView {
             nameLabel.leftAnchor.constraint(equalTo: avatarImageView.rightAnchor, constant: 12).isActive = true
 
             descriptionLabel.leftAnchor.constraint(equalTo: nameLabel.leftAnchor).isActive = true
+            descriptionLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
             descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
         }
 
-        public func setup(onClick clickClosure: @escaping (() -> Void)) {
+        public func setup(model: OrderAnimalPreview, onClick clickClosure: @escaping (() -> Void)) {
             self.onClick = clickClosure
 
-            nameLabel.text = "Томас"
-            descriptionLabel.text = "Кот, жесткий"
-            avatarImageView.kf.setImage(with: URL(string: "https://demotivation.ru/wp-content/uploads/2020/11/zwalls.ru-51679.jpg"))
+            nameLabel.text = model.name
+            descriptionLabel.text = model.breed + ", " + model.species
+            avatarImageView.kf.setImage(with: model.imageUrl)
         }
     }
 }
@@ -308,10 +326,9 @@ fileprivate final class ProfileView: UIView {
         cardView.heightAnchor.constraint(equalToConstant: 64).isActive = true
     }
 
-    public func setup(onClick clickClosure: @escaping (() -> Void)) {
+    public func setup(model: OrderCustomerPreview, onClick clickClosure: @escaping (() -> Void)) {
         titleLabel.text = "Заказчик"
-
-        cardView.setup(onClick: clickClosure)
+        cardView.setup(model: model, onClick: clickClosure)
     }
 
     private final class ProfileCardView: ShadowCardView {
@@ -321,7 +338,10 @@ fileprivate final class ProfileView: UIView {
             $0.contentMode = .scaleAspectFill
         }
 
-        private let nameLabel: UILabel = createLabel(with: .zvGray2, and: .zvMediumFootnote)
+        private let nameLabel: UILabel = createLabel(with: .zvGray2, and: .zvMediumFootnote) {
+            $0.textAlignment = .left
+            $0.lineBreakMode = .byTruncatingTail
+        }
 
         private let ratingView: CosmosView = {
             let view = CosmosView()
@@ -366,12 +386,111 @@ fileprivate final class ProfileView: UIView {
             ratingView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
         }
 
-        public func setup(onClick clickClosure: @escaping (() -> Void)) {
+        public func setup(model: OrderCustomerPreview, onClick clickClosure: @escaping (() -> Void)) {
             self.onClick = clickClosure
 
-            nameLabel.text = "Иван"
-            ratingView.rating = 2.5
-            avatarImageView.kf.setImage(with: URL(string: "https://demotivation.ru/wp-content/uploads/2020/11/zwalls.ru-51679.jpg"))
+            nameLabel.text = model.name
+            ratingView.rating = model.rating
+            avatarImageView.kf.setImage(with: model.imageUrl)
         }
     }
+}
+
+// MARK: SimilarOrdersView
+fileprivate final class SimilarOrdersView: UIView {
+    private let disposeBag = DisposeBag()
+    private let submittedSimilarOrder = PublishSubject<[OrderPreview]>()
+    let itemSelectTrigger = PublishSubject<IndexPath>()
+
+    private lazy var titleLabel: UILabel = createLabel(with: .zvBlack, and: .zvMediumTitle2)
+
+    private let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayoutWrapper(cellSize: OrderPreviewCell.cellSize)
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 16
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        collectionView.register(OrderPreviewCell.self)
+        collectionView.delegate = layout
+        collectionView.backgroundColor = .zvBackground
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.clipsToBounds = false
+        return collectionView
+    }()
+
+    override init(frame: CGRect) { super.init(frame: frame); layout(); bindView() }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    public func layout() {
+        addSubview(titleLabel)
+        addSubview(collectionView)
+
+        titleLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        titleLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
+
+        collectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24).isActive = true
+        collectionView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        collectionView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        collectionView.heightAnchor.constraint(equalToConstant: OrderPreviewCell.cellSize.height).isActive = true
+    }
+
+    private func bindView() {
+        submittedSimilarOrder.bind(to: collectionView.rx.items) { cv, index, orderPreview in
+            let cell: OrderPreviewCell = cv.createCell(by: index)
+            cell.setup(with: orderPreview)
+            return cell
+        }.disposed(by: disposeBag)
+
+        collectionView.rx.itemSelected.bind(to: itemSelectTrigger).disposed(by: disposeBag)
+    }
+
+    public func setup(with similarOrders: [OrderPreview]) {
+        self.titleLabel.text = "Похожие услуги"
+        self.submittedSimilarOrder.onNext(similarOrders)
+    }
+}
+
+extension OrderCardViewController: BindableView {
+    private func createInput() -> OrderCardViewModel.Input {
+        return .init(
+            backClickTrigger: backClickTrigger.asDriverOnErrorJustComplete()
+                .debug("back click trigger", trimOutput: true),
+            animalProfileClickTrigger: animalProfileClickTrigger.asDriverOnErrorJustComplete()
+                .debug("animal profile click trigger", trimOutput: true),
+            customerProfileClickTrigger: customerProfileClickTrigger.asDriverOnErrorJustComplete()
+                .debug("customer profile click trigger", trimOutput: true),
+            similarOrderClickTrigger: similarOrdersView.itemSelectTrigger.asDriverOnErrorJustComplete()
+                .debug("similar order click trigger", trimOutput: true)
+        )
+    }
+
+    func bind(to viewModel: OrderCardViewModel) {
+        self.setup(with: viewModel.model)
+
+        let input = createInput()
+        let output = viewModel.transform(input: input)
+
+        output.backClicked.drive().disposed(by: disposeBag)
+        output.animalProfileClicked.drive().disposed(by: disposeBag)
+        output.customerProfileClicked.drive().disposed(by: disposeBag)
+        output.similarOrderClicked.drive().disposed(by: disposeBag)
+
+        output.activityIndicator.drive(onNext: { isActive in
+            if isActive {
+                self.activityIndicator.startAnimating()
+                self.activityIndicator.show(animated: true)
+            } else {
+                self.activityIndicator.hide(animated: true) { _ in self.activityIndicator.stopAnimating() }
+            }
+        }).disposed(by: disposeBag)
+
+        // TODO: Сделать обработку ошибок на ui
+        output.errors.drive(onNext: { _ in
+            print("Ошибка при загрузке карточки заказа")
+            print("Ошибка при загрузке профиля питомца или заказчика")
+        }).disposed(by: disposeBag)
+    }
 }

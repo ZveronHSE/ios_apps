@@ -7,8 +7,32 @@
 
 import Foundation
 import UIKit
+import Swinject
+import SpecialistDomain
+import SpecialistPlatform
+import ZveronNetwork
 
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
+
+    private let resolver = Container { container in
+        // MARK: APIGATEWAY
+        container.register(Apigateway.self) { _ in Apigateway() }.inObjectScope(.container)
+
+        // MARK: DATA_SOURCE
+        // container.register(OrderDataSourceProtocol.self) { OrderDataSource(with: <~$0) }.inObjectScope(.container)
+        // container.register(ProfileDataSourceProtocol.self) { _ in ProfileDataSource(with: <~$0) }.inObjectScope(.container)
+
+        container.register(OrderDataSourceProtocol.self) { _ in OrderDataSourceMock() }.inObjectScope(.container)
+        container.register(ProfileDataSourceProtocol.self) { _ in ProfileDataSourceMock() }.inObjectScope(.container)
+
+        // MARK: REPOSITORY
+        container.register(OrderRepositoryProtocol.self) { OrderRepository(with: <~$0) }.inObjectScope(.container)
+        container.register(ProfileRepositoryProtocol.self) { ProfileRepository(with: <~$0) }.inObjectScope(.container)
+
+        // MARK: USE_CASE
+        container.register(OrderUseCaseProtocol.self) { OrderUseCase(with: <~$0) }.inObjectScope(.container)
+        container.register(ProfileUseCaseProtocol.self) { ProfileUseCase(with: <~$0) }.inObjectScope(.container)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,25 +42,24 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         tabBar.backgroundColor = .zvWhite
         tabBar.layer.cornerRadius = 10
 
-        let orderFeedVC = OrderFeedViewController()
+        let orderFeedVC = createTabBarItem(tabBarTitle: "Главная", tabBarImage: .zvSearch)
+        let orderFeedNavigator = OrderFeedNavigator(resolver: resolver, navigationManager: .init(manage: orderFeedVC))
 
         viewControllers = [
-            createTabBarItem(tabBarTitle: "Главная", tabBarImage: .zvSearch, viewController: orderFeedVC)
+            orderFeedVC
         ]
+
+        orderFeedNavigator.toFeeds()
     }
 
     private func createTabBarItem(
         tabBarTitle: String,
-        tabBarImage: UIImage,
-        viewController: UIViewController
+        tabBarImage: UIImage
     ) -> UINavigationController {
-        let navVC = UINavigationController(rootViewController: viewController)
+        let navVC = UINavigationController()
         navVC.tabBarItem.title = tabBarTitle
         navVC.tabBarItem.image = tabBarImage
-
         navVC.navigationBar.backgroundColor = .zvBackground
-        viewController.view.backgroundColor = .zvBackground
-
         return navVC
     }
 }

@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let rootVC = UINavigationController(rootViewController: TabBarViewController())
         window?.rootViewController = rootVC
 
-        // TODO: сюда можно тыкать тестируемый контроллер сразу
+        // MARK: сюда можно тыкать тестируемый контроллер сразу
 //        let rootVC = OrderCardViewController()
 //        rootVC.setup()
 //        window?.rootViewController = UINavigationController(rootViewController: rootVC)

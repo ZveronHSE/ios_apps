@@ -17,8 +17,9 @@ final class FeedHeader: UICollectionReusableView, ReusableHeader {
     private let _selectFeedSourceTrigger = PublishSubject<ProfileFeedSource>()
     public var selectFeedSourceTrigger: Driver<ProfileFeedSource> {
         return _selectFeedSourceTrigger
-            .distinctUntilChanged()
             .startWith(.actived)
+            .distinctUntilChanged()
+            .skip(1)
             .asDriverOnErrorJustComplete()
     }
 
