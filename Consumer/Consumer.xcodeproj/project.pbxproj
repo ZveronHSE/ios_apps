@@ -25,7 +25,7 @@
 		1160108429D0AEA8002D0E4D /* libConsumerPlatform.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1119829D298460A700E8349A /* libConsumerPlatform.a */; };
 		1160108529D0AEB4002D0E4D /* libConsumerDomain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1119827F298443D300E8349A /* libConsumerDomain.a */; };
 		1172B53A281ED8400062C000 /* CardLotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1172B539281ED8400062C000 /* CardLotViewController.swift */; };
-		1172B547281ED8C20062C000 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1172B546281ED8C20062C000 /* ChatViewController.swift */; };
+		1172B547281ED8C20062C000 /* ChatListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1172B546281ED8C20062C000 /* ChatListViewController.swift */; };
 		1172B54B281ED8F80062C000 /* LotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1172B548281ED8F80062C000 /* LotCell.swift */; };
 		1172B54D281ED8F80062C000 /* FirstNestingLevelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1172B54A281ED8F80062C000 /* FirstNestingLevelViewController.swift */; };
 		1172B586281EDBBE0062C000 /* SubCategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1172B56A281EDBBE0062C000 /* SubCategoryCell.swift */; };
@@ -132,6 +132,10 @@
 		11EB0C6029D0AE8700C4BC61 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EB0C5F29D0AE8700C4BC61 /* ProfileViewModel.swift */; };
 		11EB0C6229D0F52E00C4BC61 /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EB0C6129D0F52E00C4BC61 /* EditProfileViewModel.swift */; };
 		11EF868D297075EB00308FDE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EF868C297075EB00308FDE /* SceneDelegate.swift */; };
+		11F20A6F29F450CE00FF3611 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F20A6E29F450CE00FF3611 /* ChatViewController.swift */; };
+		11F20A7129F451DB00FF3611 /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F20A7029F451DB00FF3611 /* ChatManager.swift */; };
+		11F20A7329F451F200FF3611 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F20A7229F451F200FF3611 /* Chat.swift */; };
+		11F20A7529F453B300FF3611 /* ChatListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F20A7429F453B300FF3611 /* ChatListCollectionViewCell.swift */; };
 		11F655DB2979B0B400C32416 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F655DA2979B0B400C32416 /* UIViewController.swift */; };
 		11F80BAD29996CC6007D595E /* Swinject+Prefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F80BAC29996CC6007D595E /* Swinject+Prefix.swift */; };
 		11F80BC22999770B007D595E /* Color1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F80BBE2999770B007D595E /* Color1.swift */; };
@@ -287,7 +291,7 @@
 		113548AF29C3CE9E00C71B72 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		1155BDC02826E0D400857618 /* MultiPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPickerViewController.swift; sourceTree = "<group>"; };
 		1172B539281ED8400062C000 /* CardLotViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardLotViewController.swift; sourceTree = "<group>"; };
-		1172B546281ED8C20062C000 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		1172B546281ED8C20062C000 /* ChatListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
 		1172B548281ED8F80062C000 /* LotCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LotCell.swift; sourceTree = "<group>"; };
 		1172B54A281ED8F80062C000 /* FirstNestingLevelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstNestingLevelViewController.swift; sourceTree = "<group>"; };
 		1172B56A281EDBBE0062C000 /* SubCategoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubCategoryCell.swift; sourceTree = "<group>"; };
@@ -387,6 +391,10 @@
 		11EB0C5F29D0AE8700C4BC61 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		11EB0C6129D0F52E00C4BC61 /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
 		11EF868C297075EB00308FDE /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		11F20A6E29F450CE00FF3611 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		11F20A7029F451DB00FF3611 /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
+		11F20A7229F451F200FF3611 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
+		11F20A7429F453B300FF3611 /* ChatListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCollectionViewCell.swift; sourceTree = "<group>"; };
 		11F606A42996D0BD007EED98 /* ProfileDataSourceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDataSourceProtocol.swift; sourceTree = "<group>"; };
 		11F606A82996DA5C007EED98 /* ProfileRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepositoryProtocol.swift; sourceTree = "<group>"; };
 		11F655DA2979B0B400C32416 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
@@ -595,49 +603,9 @@
 		1172B540281ED8C20062C000 /* chat */ = {
 			isa = PBXGroup;
 			children = (
-				1172B541281ED8C20062C000 /* viewModel */,
-				1172B542281ED8C20062C000 /* model */,
-				1172B543281ED8C20062C000 /* view */,
+				11DE472429F3F79A00113004 /* mvvm */,
 			);
 			path = chat;
-			sourceTree = "<group>";
-		};
-		1172B541281ED8C20062C000 /* viewModel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = viewModel;
-			sourceTree = "<group>";
-		};
-		1172B542281ED8C20062C000 /* model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = model;
-			sourceTree = "<group>";
-		};
-		1172B543281ED8C20062C000 /* view */ = {
-			isa = PBXGroup;
-			children = (
-				1172B544281ED8C20062C000 /* storyboard */,
-				1172B545281ED8C20062C000 /* controller */,
-			);
-			path = view;
-			sourceTree = "<group>";
-		};
-		1172B544281ED8C20062C000 /* storyboard */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = storyboard;
-			sourceTree = "<group>";
-		};
-		1172B545281ED8C20062C000 /* controller */ = {
-			isa = PBXGroup;
-			children = (
-				1172B546281ED8C20062C000 /* ChatViewController.swift */,
-			);
-			path = controller;
 			sourceTree = "<group>";
 		};
 		1172B599281EE8E20062C000 /* helper */ = {
@@ -869,7 +837,7 @@
 		11B2CA28280C7ACC00B27DE8 /* profile */ = {
 			isa = PBXGroup;
 			children = (
-				11B2CA2C280C7C3C00B27DE8 /* view */,
+				11B2CA2C280C7C3C00B27DE8 /* mvvm */,
 			);
 			path = profile;
 			sourceTree = "<group>";
@@ -883,20 +851,15 @@
 			path = cardLot;
 			sourceTree = "<group>";
 		};
-		11B2CA2C280C7C3C00B27DE8 /* view */ = {
+		11B2CA2C280C7C3C00B27DE8 /* mvvm */ = {
 			isa = PBXGroup;
 			children = (
-				11B2CA30280C7CAF00B27DE8 /* controller */,
+				9C75006628367B1900FE5967 /* ProfileViewController.swift */,
+				11EB0C5F29D0AE8700C4BC61 /* ProfileViewModel.swift */,
+				113548AF29C3CE9E00C71B72 /* EditProfileViewController.swift */,
+				11EB0C6129D0F52E00C4BC61 /* EditProfileViewModel.swift */,
 			);
-			path = view;
-			sourceTree = "<group>";
-		};
-		11B2CA30280C7CAF00B27DE8 /* controller */ = {
-			isa = PBXGroup;
-			children = (
-				11EB0C5E29D0AE1D00C4BC61 /* mvvm */,
-			);
-			path = controller;
+			path = mvvm;
 			sourceTree = "<group>";
 		};
 		11B2CA3A280C879700B27DE8 /* view */ = {
@@ -1193,6 +1156,18 @@
 			path = service;
 			sourceTree = "<group>";
 		};
+		11DE472429F3F79A00113004 /* mvvm */ = {
+			isa = PBXGroup;
+			children = (
+				1172B546281ED8C20062C000 /* ChatListViewController.swift */,
+				11F20A6E29F450CE00FF3611 /* ChatViewController.swift */,
+				11F20A7029F451DB00FF3611 /* ChatManager.swift */,
+				11F20A7229F451F200FF3611 /* Chat.swift */,
+				11F20A7429F453B300FF3611 /* ChatListCollectionViewCell.swift */,
+			);
+			path = mvvm;
+			sourceTree = "<group>";
+		};
 		11E8D28B299FF5EE005E2053 /* extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -1247,17 +1222,6 @@
 				1191582D29D1A7A7002379E3 /* Photo.swift */,
 			);
 			path = entity;
-			sourceTree = "<group>";
-		};
-		11EB0C5E29D0AE1D00C4BC61 /* mvvm */ = {
-			isa = PBXGroup;
-			children = (
-				9C75006628367B1900FE5967 /* ProfileViewController.swift */,
-				11EB0C5F29D0AE8700C4BC61 /* ProfileViewModel.swift */,
-				113548AF29C3CE9E00C71B72 /* EditProfileViewController.swift */,
-				11EB0C6129D0F52E00C4BC61 /* EditProfileViewModel.swift */,
-			);
-			path = mvvm;
 			sourceTree = "<group>";
 		};
 		11F655D92979AFD900C32416 /* impl */ = {
@@ -1768,13 +1732,14 @@
 				9CC67120283149FA003C73D4 /* Seller.swift in Sources */,
 				1172B53A281ED8400062C000 /* CardLotViewController.swift in Sources */,
 				11ACB5FE2821C00200770C58 /* ThirdNestingLevelViewController.swift in Sources */,
+				11F20A7329F451F200FF3611 /* Chat.swift in Sources */,
 				9CC1CC8F28292BB500847398 /* AddingLotDescriptionViewController.swift in Sources */,
 				119633ED2823AA9F00A6886F /* BaseHeader.swift in Sources */,
 				11961105281C74A8009D60F3 /* PhonePasswordPickerViewModel.swift in Sources */,
 				119633EB2822CBF100A6886F /* FirstNestingHeader.swift in Sources */,
 				11961110281C74D6009D60F3 /* RegistrationRequest.swift in Sources */,
 				1172B59F281F39160062C000 /* SortingCell.swift in Sources */,
-				1172B547281ED8C20062C000 /* ChatViewController.swift in Sources */,
+				1172B547281ED8C20062C000 /* ChatListViewController.swift in Sources */,
 				1172B54B281ED8F80062C000 /* LotCell.swift in Sources */,
 				9CC6712228314A92003C73D4 /* Statics.swift in Sources */,
 				9CCF692E281AF27600A3BBCD /* AdsViewController.swift in Sources */,
@@ -1787,6 +1752,7 @@
 				11D6D47A282FD4E6008138F8 /* PriceTextField.swift in Sources */,
 				9C86E9C827E0D5E400D3BB26 /* MainAuthViewController.swift in Sources */,
 				11961106281C74A8009D60F3 /* CodePickerViewModel.swift in Sources */,
+				11F20A6F29F450CE00FF3611 /* ChatViewController.swift in Sources */,
 				11270803281FF4F700336900 /* LabelCell.swift in Sources */,
 				9CC1CC99282AB8C900847398 /* AddingLotAddressViewController.swift in Sources */,
 				11EB0C6029D0AE8700C4BC61 /* ProfileViewModel.swift in Sources */,
@@ -1796,6 +1762,7 @@
 				9C705D942815BBF700A33528 /* Corner.swift in Sources */,
 				11FF4A5929A13D1A00052D2B /* BindableView.swift in Sources */,
 				9C705D8228159D0300A33528 /* OnboardingDescriptions.swift in Sources */,
+				11F20A7529F453B300FF3611 /* ChatListCollectionViewCell.swift in Sources */,
 				11B2CA5A280C88EE00B27DE8 /* PhonePickerViewModel.swift in Sources */,
 				9CC1CC9B282AB8ED00847398 /* AddingLotAddressViewModel.swift in Sources */,
 				11BF5ABD29788AAE007D34AE /* AuthServiceProtocol.swift in Sources */,
@@ -1831,6 +1798,7 @@
 				9CC6711E28314937003C73D4 /* CardLotPreview.swift in Sources */,
 				9C705D8B28159D8000A33528 /* Onboard.swift in Sources */,
 				1197D28E282B129C00CF2897 /* UIViewControllerWithAuth.swift in Sources */,
+				11F20A7129F451DB00FF3611 /* ChatManager.swift in Sources */,
 				11ACB5F52821262900770C58 /* FilterViewController.swift in Sources */,
 				9CC6712428314B4C003C73D4 /* ContactWays.swift in Sources */,
 				1172B54D281ED8F80062C000 /* FirstNestingLevelViewController.swift in Sources */,

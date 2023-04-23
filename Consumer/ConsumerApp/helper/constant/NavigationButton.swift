@@ -14,6 +14,7 @@ enum NavigationButton {
     case settings
     case share
     case edit
+    case chatSettings
 
     private var closeButton: UIButton {
         let closeButton = UIButton(type: .system)
@@ -52,6 +53,13 @@ enum NavigationButton {
         return editButton
     }
     
+    private var chatSettingsButton: UIButton {
+        let chatSettingsButton = UIButton(type: .custom)
+        let chatSettingsImage = #imageLiteral(resourceName: "chat_settings")
+        chatSettingsButton.setImage(chatSettingsImage, for: .normal)
+        return chatSettingsButton
+    }
+    
     var button: UIButton {
         switch self {
         case .back: return backButton
@@ -59,6 +67,7 @@ enum NavigationButton {
         case .settings: return settingsButton
         case .share: return shareButton
         case .edit: return editButton
+        case .chatSettings: return chatSettingsButton
         }
     }
 }

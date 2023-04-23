@@ -55,7 +55,9 @@ extension UIView {
         gradient.startPoint = orientation.startPoint
         gradient.endPoint = orientation.endPoint
         self.clipsToBounds = true
-        self.layer.insertSublayer(gradient, at: 0)
+        
+        self.layer.addSublayer(gradient)
+       // self.layer.insertSublayer(gradient, at: 0)
     }
 
     // Градиент для границы кнопки с закруглением
