@@ -15,6 +15,8 @@ enum NavigationButton {
     case share
     case edit
     case chatSettings
+    case chatPhone
+    case chatSettingsBlack
 
     private var closeButton: UIButton {
         let closeButton = UIButton(type: .system)
@@ -60,6 +62,23 @@ enum NavigationButton {
         return chatSettingsButton
     }
     
+    private var chatPhoneButton: UIButton {
+        let chatPhoneButton = UIButton(type: .system)
+        let chatPhoneImage = UIImage(systemName: "phone")
+        chatPhoneButton.setImage(chatPhoneImage, for: .normal)
+        chatPhoneButton.tintColor = Color1.black
+        return chatPhoneButton
+    }
+    
+    private var chatSettingsBlackButton: UIButton {
+        let chatSettingsBlackButton = UIButton(type: .system)
+        let chatSettingsImage = UIImage(systemName: "ellipsis")!
+        let chatSettingsImage2 = UIImage(cgImage: chatSettingsImage.cgImage!, scale: chatSettingsImage.scale, orientation: .right)
+        chatSettingsBlackButton.setImage(chatSettingsImage2, for: .normal)
+        chatSettingsBlackButton.tintColor = Color1.black
+        return chatSettingsBlackButton
+    }
+    
     var button: UIButton {
         switch self {
         case .back: return backButton
@@ -68,22 +87,8 @@ enum NavigationButton {
         case .share: return shareButton
         case .edit: return editButton
         case .chatSettings: return chatSettingsButton
+        case .chatPhone: return chatPhoneButton
+        case .chatSettingsBlack: return chatSettingsBlackButton
         }
     }
 }
-
-//struct NavigationButton {
-//    static var close: UIButton {
-//        let closeButton = UIButton(type: .system)
-//        closeButton.setImage(Icon.close, for: .normal)
-//        closeButton.tintColor = ZveronConstant.Color.proto1
-//        return closeButton
-//    }
-//
-//    static var back: UIButton {
-//        let backButton = UIButton(type: .system)
-//        backButton.setImage(Icon.back, for: .normal)
-//        backButton.tintColor = ZveronConstant.Color.proto1
-//        return backButton
-//    }
-//}

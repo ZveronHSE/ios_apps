@@ -11,7 +11,7 @@ class Chat {
     let imageName: String
     var messages: [Message]
     var lastMessage: Message {
-        return messages.last ?? Message(text: "", date: Date())
+        return messages.last ?? Message(text: "", date: Date(), isRead: true)
     }
     
     init(name: String, imageName: String, messages: [Message]) {
@@ -24,4 +24,6 @@ class Chat {
 struct Message {
     let text: String
     let date: Date
+    // пока будет использовать как поле идентифицуюриещее от кого отправлено
+    let isRead: Bool
 }

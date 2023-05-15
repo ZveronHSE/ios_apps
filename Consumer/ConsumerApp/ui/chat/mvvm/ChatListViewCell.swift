@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class ChatListCollectionViewCell: UICollectionViewCell {
+class ChatListViewCell: UICollectionViewCell {
     
     var imageUser: UIImageView = {
         let imgView = UIImageView(frame: CGRect(x: 0, y: 0, width: 26, height: 26))

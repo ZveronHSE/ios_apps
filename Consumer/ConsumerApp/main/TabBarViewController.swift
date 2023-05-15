@@ -82,7 +82,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         switch viewController.children.first {
         case is FavoriteViewController: break
         case is AdsViewController: break
-        case is ChatViewController: break
+        case is ChatMessageViewController: break
         case is ProfileViewController: break
         default:
             return true

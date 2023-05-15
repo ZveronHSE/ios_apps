@@ -39,7 +39,7 @@ class ChatListViewController: UIViewControllerWithAuth, UICollectionViewDelegate
         collectionView.backgroundColor = Color.backgroundScreen.color
         collectionView.showsHorizontalScrollIndicator = false
        // collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
-        collectionView.register(ChatListCollectionViewCell.self, forCellWithReuseIdentifier: "chatCell")
+        collectionView.register(ChatListViewCell.self, forCellWithReuseIdentifier: "chatCell")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
@@ -87,7 +87,7 @@ class ChatListViewController: UIViewControllerWithAuth, UICollectionViewDelegate
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "chatCell", for: indexPath) as! ChatListCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "chatCell", for: indexPath) as! ChatListViewCell
         
         // Set up the cell with chat data
         let chat: Chat
@@ -113,8 +113,9 @@ class ChatListViewController: UIViewControllerWithAuth, UICollectionViewDelegate
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let chat = ChatManager.shared.chatList[indexPath.row]
-        let chatViewController = ChatViewController(chat: chat)
-        navigationController?.pushViewController(chatViewController, animated: true)
+        let messageVC = ChatMessageViewController()
+        messageVC.setup(with: chat)
+        self.navigationController?.pushViewController(messageVC, animated: true)
     }
     
     // MARK: - Collection view flow layout
