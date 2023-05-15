@@ -41,7 +41,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         // let mainNavigator = MainNavigator(resolver: container, navigationController: mainVC)
 
         let favoriteVC = FavoriteViewController()
-        let addVC = AdsViewController()
+        let addVC = RootAddingViewController()
         let chatVC = ChatListViewController()
         let profileVC = ProfileViewController()
         viewControllers = [
@@ -81,7 +81,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         switch viewController.children.first {
         case is FavoriteViewController: break
-        case is AdsViewController: break
+        case is RootAddingViewController: break
         case is ChatMessageViewController: break
         case is ProfileViewController: break
         default:

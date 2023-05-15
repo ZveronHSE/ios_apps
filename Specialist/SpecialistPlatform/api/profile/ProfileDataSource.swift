@@ -29,7 +29,7 @@ public final class ProfileDataSource: ProfileDataSourceProtocol {
         let request: GetCustomerRequest = .with { $0.profileID = Int64(id) }
 
         return api
-            .callWithRetry(returnType: GetCustomerResponse.self, requestBody: request, methodAlies: "")
+            .callWithRetry(returnType: GetCustomerResponse.self, requestBody: request, methodAlies: "orderGetCustomerInfo")
             .parse()
     }
 }

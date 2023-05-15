@@ -144,7 +144,7 @@ class FavoriteViewModelTests: XCTestCase {
     }
 
     // TODO: сделать потом как нибудь
-//    func test_transform_itemSelectTrigger_selectedProfileEmited() {
+    func test_transform_itemSelectTrigger_selectedProfileEmited() {}
 //        // arrange
 //        let indexPath = IndexPath(item: 2, section: 0)
 //        let vendorItems = createProfiles()

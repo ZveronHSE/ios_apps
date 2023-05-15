@@ -34,14 +34,14 @@ final class OrderFeedViewModel: ViewModelType {
 
         let dataInitLoaded = input.initDataTrigger
             .flatMap { _ in
-            self.usecase.getWaterfall(filters: [], sort: .dateCreated, initData: true)
+                self.usecase.getWaterfall(filters: [], sort: ._default, initData: true)
                 .do(onNext: { self._items.onNext($0) })
                 .trackError(errorTracker)
                 .asDriverOnErrorJustReturnVoid()
         }
 
         let dataFetched = input.fetchDataTrigger.flatMap { _ in
-            self.usecase.getWaterfall(filters: [], sort: .dateCreated, initData: false)
+            self.usecase.getWaterfall(filters: [], sort: ._default, initData: false)
                 .do(onNext: { self._items.onNext((try? self._items.value())! + $0) })
                 .trackError(errorTracker)
                 .asDriverOnErrorJustReturnVoid()

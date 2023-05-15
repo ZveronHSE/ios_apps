@@ -44,6 +44,7 @@
 		11318B8329EF3393005EAA39 /* AnimalDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11318B8229EF3393005EAA39 /* AnimalDocument.swift */; };
 		11318B8529EF359A005EAA39 /* OrderAnimalProfileNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11318B8429EF359A005EAA39 /* OrderAnimalProfileNavigator.swift */; };
 		11318B8729EF3604005EAA39 /* OrderAnimalProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11318B8629EF3604005EAA39 /* OrderAnimalProfileViewModel.swift */; };
+		11543FAD2A1BE9E600FFA341 /* AnimalDocumentMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11543FAC2A1BE9E600FFA341 /* AnimalDocumentMapper.swift */; };
 		11547E6B29D0917F00E47947 /* SpecialistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11547E6A29D0917F00E47947 /* SpecialistTests.swift */; };
 		11547E7229D0919000E47947 /* libSpecialistDomain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11547E5229D0914700E47947 /* libSpecialistDomain.a */; };
 		11547E7329D0919000E47947 /* libSpecialistPlatform.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11547E5D29D0916900E47947 /* libSpecialistPlatform.a */; };
@@ -64,6 +65,10 @@
 		1195E30A29EDAE7E00B65E26 /* String+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1195E30929EDAE7E00B65E26 /* String+Size.swift */; };
 		1195E30C29EDAEA000B65E26 /* Observable+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1195E30B29EDAEA000B65E26 /* Observable+Ext.swift */; };
 		119F82E029F17A9200E1CD7A /* CustomSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119F82DF29F17A9200E1CD7A /* CustomSectionModel.swift */; };
+		11C975922A155A6D00B1786D /* OrderFeedViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C975912A155A6D00B1786D /* OrderFeedViewModelTests.swift */; };
+		11C975942A155A7E00B1786D /* OrderCardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C975932A155A7E00B1786D /* OrderCardViewModelTests.swift */; };
+		11C975962A155A8E00B1786D /* OrderAnimalProfileViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C975952A155A8E00B1786D /* OrderAnimalProfileViewModelTests.swift */; };
+		11C975982A155A9F00B1786D /* OrderCustomerProfileViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C975972A155A9F00B1786D /* OrderCustomerProfileViewModelTests.swift */; };
 		11D50C2829E5E40700CDD57F /* ShadowCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D50C2729E5E40700CDD57F /* ShadowCardView.swift */; };
 		11EFC6FD29D03F2000A7420F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11EFC6FC29D03F2000A7420F /* LaunchScreen.storyboard */; };
 		11EFC6FF29D043AE00A7420F /* UIImage+Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EFC6FE29D043AE00A7420F /* UIImage+Constant.swift */; };
@@ -177,6 +182,7 @@
 		11318B8229EF3393005EAA39 /* AnimalDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimalDocument.swift; sourceTree = "<group>"; };
 		11318B8429EF359A005EAA39 /* OrderAnimalProfileNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderAnimalProfileNavigator.swift; sourceTree = "<group>"; };
 		11318B8629EF3604005EAA39 /* OrderAnimalProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderAnimalProfileViewModel.swift; sourceTree = "<group>"; };
+		11543FAC2A1BE9E600FFA341 /* AnimalDocumentMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimalDocumentMapper.swift; sourceTree = "<group>"; };
 		11547E5229D0914700E47947 /* libSpecialistDomain.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSpecialistDomain.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		11547E5D29D0916900E47947 /* libSpecialistPlatform.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSpecialistPlatform.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		11547E6829D0917F00E47947 /* SpecialistTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpecialistTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -193,6 +199,10 @@
 		1195E30929EDAE7E00B65E26 /* String+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Size.swift"; sourceTree = "<group>"; };
 		1195E30B29EDAEA000B65E26 /* Observable+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Observable+Ext.swift"; sourceTree = "<group>"; };
 		119F82DF29F17A9200E1CD7A /* CustomSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSectionModel.swift; sourceTree = "<group>"; };
+		11C975912A155A6D00B1786D /* OrderFeedViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderFeedViewModelTests.swift; sourceTree = "<group>"; };
+		11C975932A155A7E00B1786D /* OrderCardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardViewModelTests.swift; sourceTree = "<group>"; };
+		11C975952A155A8E00B1786D /* OrderAnimalProfileViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderAnimalProfileViewModelTests.swift; sourceTree = "<group>"; };
+		11C975972A155A9F00B1786D /* OrderCustomerProfileViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCustomerProfileViewModelTests.swift; sourceTree = "<group>"; };
 		11D50C2729E5E40700CDD57F /* ShadowCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowCardView.swift; sourceTree = "<group>"; };
 		11EFC6FC29D03F2000A7420F /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		11EFC6FE29D043AE00A7420F /* UIImage+Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Constant.swift"; sourceTree = "<group>"; };
@@ -424,6 +434,7 @@
 			children = (
 				11318B7E29EF317E005EAA39 /* AnimalProfileMapper.swift */,
 				111CC75E2A0E9AD8004E5D96 /* CustomerProfileMapper.swift */,
+				11543FAC2A1BE9E600FFA341 /* AnimalDocumentMapper.swift */,
 			);
 			path = entityMapper;
 			sourceTree = "<group>";
@@ -460,6 +471,7 @@
 		11547E6929D0917F00E47947 /* SpecialistTests */ = {
 			isa = PBXGroup;
 			children = (
+				11C9758D2A155A2500B1786D /* unitTests */,
 				11547E6A29D0917F00E47947 /* SpecialistTests.swift */,
 			);
 			path = SpecialistTests;
@@ -564,6 +576,41 @@
 				119F82DF29F17A9200E1CD7A /* CustomSectionModel.swift */,
 			);
 			path = other;
+			sourceTree = "<group>";
+		};
+		11C9758D2A155A2500B1786D /* unitTests */ = {
+			isa = PBXGroup;
+			children = (
+				11C9758F2A155A4000B1786D /* test */,
+				11C9758E2A155A3C00B1786D /* mock */,
+			);
+			path = unitTests;
+			sourceTree = "<group>";
+		};
+		11C9758E2A155A3C00B1786D /* mock */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = mock;
+			sourceTree = "<group>";
+		};
+		11C9758F2A155A4000B1786D /* test */ = {
+			isa = PBXGroup;
+			children = (
+				11C975902A155A4C00B1786D /* order */,
+			);
+			path = test;
+			sourceTree = "<group>";
+		};
+		11C975902A155A4C00B1786D /* order */ = {
+			isa = PBXGroup;
+			children = (
+				11C975912A155A6D00B1786D /* OrderFeedViewModelTests.swift */,
+				11C975932A155A7E00B1786D /* OrderCardViewModelTests.swift */,
+				11C975952A155A8E00B1786D /* OrderAnimalProfileViewModelTests.swift */,
+				11C975972A155A9F00B1786D /* OrderCustomerProfileViewModelTests.swift */,
+			);
+			path = order;
 			sourceTree = "<group>";
 		};
 		11F0D2D329EDBE7800B78FBF /* order */ = {
@@ -1032,6 +1079,7 @@
 				111CC7612A0E9BB7004E5D96 /* GetCustomerResponseMapper.swift in Sources */,
 				11318B8129EF3225005EAA39 /* GetAnimalResponseExtMapper.swift in Sources */,
 				11318B7F29EF317E005EAA39 /* AnimalProfileMapper.swift in Sources */,
+				11543FAD2A1BE9E600FFA341 /* AnimalDocumentMapper.swift in Sources */,
 				11F0D2F929EDC7FC00B78FBF /* MapperProtocol.swift in Sources */,
 				11F0D2F029EDC35400B78FBF /* OrderDataSource.swift in Sources */,
 				11F0D30B29EDD82C00B78FBF /* OrderCustomerPreviewMapper.swift in Sources */,
@@ -1045,6 +1093,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				11547E6B29D0917F00E47947 /* SpecialistTests.swift in Sources */,
+				11C975922A155A6D00B1786D /* OrderFeedViewModelTests.swift in Sources */,
+				11C975942A155A7E00B1786D /* OrderCardViewModelTests.swift in Sources */,
+				11C975962A155A8E00B1786D /* OrderAnimalProfileViewModelTests.swift in Sources */,
+				11C975982A155A9F00B1786D /* OrderCustomerProfileViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

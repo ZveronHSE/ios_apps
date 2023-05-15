@@ -53,6 +53,9 @@ public final class ProfileUseCase: ProfileUseCaseProtocol {
         return profileRepository.deleteProfile()
             .mapErrors(default: ProfileError.failedDeleteProfile)
     }
-    
- 
+
+    public func getAnimalsByProfile() -> Observable<[Animal]> {
+        return profileRepository.getAnimalsByProfile()
+            .mapErrors(default: ProfileError.failedLoadAnimals)
+    }
 }

@@ -21,8 +21,7 @@ extension ProfileGRPC.FullAnimal: MapperProtocol {
             // TODO: жать фикса с бека
             age: String(self.age),
             imageUrls: self.imageUrls.map { URL(string: $0)! },
-            // TODO: жать фикса с бека
-            documents: self.documentUrls.map { AnimalDocument(name: "первый", url: URL(string: $0)!) }
+            documents: self.documents.map { $0.mapToModel() }
         )
     }
 }

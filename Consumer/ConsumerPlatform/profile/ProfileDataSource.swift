@@ -67,5 +67,19 @@ public final class ProfileRemoteDataSource: ProfileDataSourceProtocol {
         apigateway.callWithRetry(methodAlies: "profileDelete")
     }
     
-
+    // полный перечень животных
+    public func getAnimalsByProfile() -> Observable<[Animal]> {
+        apigateway.callWithRetry(returnType: ProfileGRPC.GetAnimalsByProfileResponse.self, methodAlies: "profileGetAnimalsByProfile").map {an in
+            an.animals.map{
+                .init(
+                    id: Int($0.id),
+                    name: $0.name,
+                    breed: $0.breed,
+                    species: $0.species,
+                    age: Int($0.age),
+                    imageUrl: URL(string: $0.imageURL)!
+                )
+            }
+        }
+    }
 }

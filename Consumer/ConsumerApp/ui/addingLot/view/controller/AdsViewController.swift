@@ -9,9 +9,10 @@ import UIKit
 import BottomSheet
 import RxSwift
 
-class AdsViewController: UIViewControllerWithAuth {
+class AdsViewController: UIViewController {
     private let viewModel = ViewModelFactory.get(AdsViewModel.self)
-    
+    private let disposeBag = DisposeBag()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
@@ -19,7 +20,7 @@ class AdsViewController: UIViewControllerWithAuth {
     }
     
     private let addLotBtn: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -39,16 +40,15 @@ class AdsViewController: UIViewControllerWithAuth {
         addLotBtn.setTitle("Добавить объявление", for: .normal)
         addLotBtn.contentHorizontalAlignment = .center
         addLotBtn.setTitleColor(.white, for: .normal)
-        self.view.backgroundColor = Color.backgroundScreen.color
+       // self.view.backgroundColor = Color.backgroundScreen.color
         view.addSubview(addLotBtn)
+
         addLotBtn.heightAnchor.constraint(equalToConstant: 52).isActive = true
         addLotBtn.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -16).isActive = true
         addLotBtn.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         addLotBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
+
+        addLotBtn.layoutIfNeeded()
         addLotBtn.applyGradient(.mainButton, .horizontal, Corner.mainButton.rawValue)
     }
-    
 }

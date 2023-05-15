@@ -21,6 +21,8 @@ struct ViewModelFactory {
     fileprivate static let parameterRemoteDataSource = ParameterRemoteDataSource(with: apigateway)
     fileprivate static let profileRemoteDataSource = ProfileRemoteDataSource(apigateway)
     fileprivate static let objectStorageDataSource = ObjectStorageDataSource(api: apigateway)
+
+    fileprivate static let orderDataSource =  OrderDataSourceMock(apigateway)
     // LOCAL_DATA_SOURCES
 
     
@@ -31,7 +33,8 @@ struct ViewModelFactory {
     fileprivate static let parameterRepository = ParameterRepository(with: parameterRemoteDataSource)
     fileprivate static let profileRepository = ProfileRepository(remote: profileRemoteDataSource)
     fileprivate static let objectStorageRepository = ObjectStorageRepository(data: objectStorageDataSource)
-    
+    fileprivate static let orderRepository = OrderRepository(ds: orderDataSource)
+
     
     // USE_CASES
     fileprivate static let authUseCase = AuthUseCase(authRepository: authRepository)
@@ -39,6 +42,7 @@ struct ViewModelFactory {
     fileprivate static let favoriteUseCase = FavoriteUseCase(with: favoriteRepository, and: lotRepository)
     fileprivate static let profileUseCase = ProfileUseCase(with: profileRepository)
     fileprivate static let createLotUseCase = CreateLotUseCase(with: lotRepository, with: parameterRepository, and: objectStorageRepository)
+    fileprivate static let orderUseCase = OrderUseCase(rep: orderRepository)
 
     // TODO: DEPRECATED
 
@@ -73,6 +77,7 @@ struct ViewModelFactory {
             
         case is AddingLotAddressViewModel.Type: return (AddingLotAddressViewModel(createLotUseCase) as? T)!
 
+        case is OrderViewModel.Type: return (OrderViewModel(orderUseCase, profileUseCase) as? T)!
         
         default:
             fatalError("Not implemented")

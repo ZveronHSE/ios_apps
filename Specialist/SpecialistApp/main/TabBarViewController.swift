@@ -19,11 +19,11 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         container.register(Apigateway.self) { _ in Apigateway() }.inObjectScope(.container)
 
         // MARK: DATA_SOURCE
-        // container.register(OrderDataSourceProtocol.self) { OrderDataSource(with: <~$0) }.inObjectScope(.container)
-        // container.register(ProfileDataSourceProtocol.self) { _ in ProfileDataSource(with: <~$0) }.inObjectScope(.container)
+         container.register(OrderDataSourceProtocol.self) { OrderDataSource(with: <~$0) }.inObjectScope(.container)
+         container.register(ProfileDataSourceProtocol.self) { ProfileDataSource(with: <~$0) }.inObjectScope(.container)
 
-        container.register(OrderDataSourceProtocol.self) { _ in OrderDataSourceMock() }.inObjectScope(.container)
-        container.register(ProfileDataSourceProtocol.self) { _ in ProfileDataSourceMock() }.inObjectScope(.container)
+//        container.register(OrderDataSourceProtocol.self) { _ in OrderDataSourceMock() }.inObjectScope(.container)
+//        container.register(ProfileDataSourceProtocol.self) { _ in ProfileDataSourceMock() }.inObjectScope(.container)
 
         // MARK: REPOSITORY
         container.register(OrderRepositoryProtocol.self) { OrderRepository(with: <~$0) }.inObjectScope(.container)

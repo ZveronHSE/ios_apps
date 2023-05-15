@@ -9,18 +9,18 @@ import Foundation
 
 import XCTest
 
-open class SnapshotTestCase: XCTestCase {
+open class SnapshotTestCase {
     private static let requiredDevice = "iPhone13,2"
 
     private static let requiredOSVersion = 13
 
-    override open class func setUp() {
-        super.setUp()
-
-        checkEnvironments()
-
-        UIView.setAnimationsEnabled(false)
-    }
+//    override open class func setUp() {
+//        super.setUp()
+//
+//        checkEnvironments()
+//
+//        UIView.setAnimationsEnabled(false)
+//    }
 
     private static func checkEnvironments() {
 //        let deviceModel = ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"]

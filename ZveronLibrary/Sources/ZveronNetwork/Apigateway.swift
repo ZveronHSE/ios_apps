@@ -45,7 +45,7 @@ public class Apigateway {
             do {
                 print("Started request:\(methodAlies)")
 
-               // print("Started request:\(methodAlies) with body:\n\(requestBody.debugDescription)")
+                print("Started request:\(methodAlies) with body:\n\(requestBody.debugDescription)")
 
                 // try to open connection
                 let (connection, client) = try self.openConnection()
@@ -82,7 +82,7 @@ public class Apigateway {
                 try self.closeConnection(connection)
 
                // print("Complete response:\(methodAlies) with body:\n\(responseBody.debugDescription)")
-                print("Successful response:\(methodAlies)")
+                print("Successful response:\(methodAlies) \(responseBody.debugDescription)")
 
                 // call callback with response
                 DispatchQueue.main.async { completion(.success(responseBody)) }

@@ -59,6 +59,8 @@ public final class ProfileRepository: ProfileRepositoryProtocol {
     public func deleteProfile() -> Observable<Void> {
         return remoteSource.deleteProfile()
     }
-    
-    
+
+    public func getAnimalsByProfile() -> Observable<[Animal]> {
+        return remoteSource.getAnimalsByProfile()
+    }
 }
