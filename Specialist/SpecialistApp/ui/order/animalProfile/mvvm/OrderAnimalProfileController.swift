@@ -12,98 +12,103 @@ import RxCocoa
 import SpecialistDomain
 
 final class OrderAnimalProfileController: UIViewController {
-    private let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
     private let pdfLoadedTirgger = PublishSubject<URL>()
+    private let backClickTrigger = PublishSubject<Void>()
 
-    private lazy var headerLabel: UILabel = createLabel(with: .zvBlack, and: .zvMediumTitle2)
-    private lazy var kindView: HeaderAndTitleView = createView()
-    private lazy var porodaView: HeaderAndTitleView = createView()
-    private lazy var nameView: HeaderAndTitleView = createView()
-    private lazy var ageView: HeaderAndTitleView = createView()
+    private let scrollView: UIScrollView = createView()
+
+    private let contentView: UIView = createView()
+
+    private let headerLabel: UILabel = createLabel(with: .zvBlack, and: .zvMediumTitle2)
+    private let kindView: HeaderAndTitleView = createView()
+    private let porodaView: HeaderAndTitleView = createView()
+    private let nameView: HeaderAndTitleView = createView()
+    private let ageView: HeaderAndTitleView = createView()
     private let photosView: PhotosView = createView()
     private let documetsView: DocumentsView = createView()
+    private let activityIndicator: UIActivityIndicatorView = createActivityIndicator()
 
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .zvBackground
         navigationItem.leftBarButtonItem = createNavigationButton(type: .back) { [weak self] in
-            self?.navigationController?.popViewController(animated: true)
+            self?.backClickTrigger.onNext(Void())
         }
 
-        navigationItem.rightBarButtonItem = createNavigationButton(type: .setting) { [weak self] in
-        }
-
-        layout()
-        bindViews()
+        layoutScrollView()
+        layoutContentView()
     }
 
-    private func layout() {
+    private func layoutScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        view.addSubview(activityIndicator)
+
+        scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        scrollView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+
+        contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        contentView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
+
+    private func layoutContentView() {
         let paddings = UIEdgeInsets(top: 24, left: 16, bottom: 0, right: -16)
 
-        view.addSubview(headerLabel)
-        view.addSubview(kindView)
-        view.addSubview(porodaView)
-        view.addSubview(nameView)
-        view.addSubview(ageView)
-        view.addSubview(photosView)
-        view.addSubview(documetsView)
+        contentView.addSubview(headerLabel)
+        contentView.addSubview(kindView)
+        contentView.addSubview(porodaView)
+        contentView.addSubview(nameView)
+        contentView.addSubview(ageView)
+        contentView.addSubview(photosView)
+        contentView.addSubview(documetsView)
 
-        headerLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: paddings.top).isActive = true
-        headerLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: paddings.left).isActive = true
+        headerLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: paddings.top).isActive = true
+        headerLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: paddings.left).isActive = true
 
         kindView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 16).isActive = true
-        kindView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: paddings.left).isActive = true
-        kindView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: paddings.right).isActive = true
+        kindView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: paddings.left).isActive = true
+        kindView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: paddings.right).isActive = true
 
         porodaView.topAnchor.constraint(equalTo: kindView.bottomAnchor, constant: 16).isActive = true
-        porodaView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: paddings.left).isActive = true
-        porodaView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: paddings.right).isActive = true
+        porodaView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: paddings.left).isActive = true
+        porodaView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: paddings.right).isActive = true
 
         nameView.topAnchor.constraint(equalTo: porodaView.bottomAnchor, constant: 16).isActive = true
-        nameView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: paddings.left).isActive = true
-        nameView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: paddings.right).isActive = true
+        nameView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: paddings.left).isActive = true
+        nameView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: paddings.right).isActive = true
 
         ageView.topAnchor.constraint(equalTo: nameView.bottomAnchor, constant: 16).isActive = true
-        ageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: paddings.left).isActive = true
-        ageView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: paddings.right).isActive = true
+        ageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: paddings.left).isActive = true
+        ageView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: paddings.right).isActive = true
 
         photosView.topAnchor.constraint(equalTo: ageView.bottomAnchor, constant: 28).isActive = true
-        photosView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        photosView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        photosView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
+        photosView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
 
         documetsView.topAnchor.constraint(equalTo: photosView.bottomAnchor, constant: 28).isActive = true
-        documetsView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        documetsView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        documetsView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
+        documetsView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
+        documetsView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
 
-    public func setup() {
+    public func setup(with model: AnimalProfile) {
         navigationItem.title = "Профиль питомца"
         headerLabel.text = "Данные о животном"
-        kindView.setup(with: "Вид животного", and: "Кот")
-        porodaView.setup(with: "Порода", and: "Британец")
-        nameView.setup(with: "Имя", and: "Томас")
-        ageView.setup(with: "Возраст", and: "2 года")
-        photosView.setup(with: [
-            URL(string: "https://oir.mobi/uploads/posts/2022-09/1662230018_1-oir-mobi-p-zhirnii-britanskii-kot-instagram-4.jpg")!,
-            URL(string: "https://phonoteka.org/uploads/posts/2021-07/1625230752_10-phonoteka-org-p-britanskie-oboi-oboi-krasivo-10.jpg")!
-        ])
-        documetsView.setup(with: [
-            "privivka.PDF",
-            "privivka2.PDF",
-            "privivka3.PDF",
-            "privivka4.PDF"
-        ])
-    }
 
-    public func bindViews() {
-
-        self.documetsView.documentClickedTrigger.flatMap { index in
-            return PDFLoadService.shared.loadPdf(from: "https://www.tutorialspoint.com/swift/swift_tutorial.pdf")
-        }.bind(onNext: { documentUrl in
-            let nextVC = PDFViewController(pdfUrl: documentUrl)
-            nextVC.modalPresentationStyle = .fullScreen
-            self.present(nextVC, animated: true)
-        }).disposed(by: disposeBag)
+        kindView.setup(with: "Вид животного", and: model.breed)
+        porodaView.setup(with: "Порода", and: model.species)
+        nameView.setup(with: "Имя", and: model.name)
+        ageView.setup(with: "Возраст", and: model.age)
+        photosView.setup(with: model.imageUrls)
+        documetsView.setup(with: model.documents.map { $0.name })
     }
 }
 
@@ -238,5 +243,42 @@ extension DocumentsView: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return AnimalDocumentCell.cellSize
+    }
+}
+
+extension OrderAnimalProfileController: BindableView {
+
+    private func createInput() -> OrderAnimalProfileViewModel.Input {
+
+        let documentClickTrigger = documetsView.documentClickedTrigger.asDriverOnErrorJustComplete()
+
+        return .init(
+            backClickTrigger: backClickTrigger.asDriverOnErrorJustComplete()
+                .debug("back click trigger", trimOutput: true),
+            documentClickTrigger: documentClickTrigger.debug("document click trigger", trimOutput: true)
+        )
+    }
+
+    func bind(to viewModel: OrderAnimalProfileViewModel) {
+        self.setup(with: viewModel.model)
+        let input = createInput()
+        let output = viewModel.transform(input: input)
+
+        output.backClicked.drive().disposed(by: disposeBag)
+        output.documentClicked.drive().disposed(by: disposeBag)
+
+        output.activityIndicator.drive(onNext: { isActive in
+            if isActive {
+                self.activityIndicator.startAnimating()
+                self.activityIndicator.show(animated: true)
+            } else {
+                self.activityIndicator.hide(animated: true) { _ in self.activityIndicator.stopAnimating() }
+            }
+        }).disposed(by: disposeBag)
+
+        // TODO: Сделать обработку ошибок на ui
+        output.errors.drive(onNext: { _ in
+            print("Ошибка при загрузке документа")
+        }).disposed(by: disposeBag)
     }
 }

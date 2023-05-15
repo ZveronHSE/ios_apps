@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Cosmos
+import SpecialistDomain
 
 final class CustomerInfoHeader: UICollectionReusableView, ReusableHeader {
     static var reuseID: String = "customerInfoHeader"
@@ -57,10 +58,10 @@ final class CustomerInfoHeader: UICollectionReusableView, ReusableHeader {
         avatarImageView.layer.cornerRadius = avatarImageView.frame.size.height / 2
     }
 
-    public func setup() {
-        fullnameLabel.text = "Galanov Alexander Sergeevich"
-        avatarImageView.kf.setImage(with: URL(string: "https://img3.akspic.ru/previews/2/3/3/7/6/167332/167332-oblako-lyudi_v_prirode-prirodnyj_landshaft-schastliv-poslesvechenie-x750.jpg"))
-        ratingView.setup(4.9)
+    public func setup(with model: CustomerProfile) {
+        fullnameLabel.text = model.fullname
+        avatarImageView.kf.setImage(with: model.imageUrl)
+        ratingView.setup(model.rating)
     }
 
     public static func processFitHeight(widthScreen: CGFloat, fullname: String) -> CGFloat {

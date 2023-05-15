@@ -9,10 +9,11 @@ import Foundation
 import UIKit
 import SpecialistDomain
 import RxSwift
+import RxCocoa
 import RxDataSources
 
 final class OrderFeedViewController: UIViewController {
-    private let dis = DisposeBag()
+    let disposeBag = DisposeBag()
 
     private lazy var searchBar: CustomSearchBar = {
         let view = CustomSearchBar()
@@ -27,6 +28,14 @@ final class OrderFeedViewController: UIViewController {
         return view
     }()
 
+    private var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.attributedTitle = NSAttributedString(string: "Обновление ...")
+        refreshControl.tintColor = .zvGray3
+        refreshControl.translatesAutoresizingMaskIntoConstraints = false
+        return refreshControl
+    }()
+
     private lazy var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: self.flowLayout)
         view.backgroundColor = .clear
@@ -34,18 +43,22 @@ final class OrderFeedViewController: UIViewController {
         view.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 10, right: 0)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.delegate = self
-        view.dataSource = self
+        view.refreshControl = self.refreshControl
+        return view
+    }()
+
+    private var activityIndicator: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .large)
+        view.hide(animated: false)
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .zvBackground
+        navigationController?.isNavigationBarHidden = true
         layout()
-        bindView()
-    }
-
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -56,10 +69,9 @@ final class OrderFeedViewController: UIViewController {
     private func layout() {
         let paddings = UIEdgeInsets(top: 60, left: 16, bottom: 0, right: -16)
 
-        navigationController?.isNavigationBarHidden = true
-
         view.addSubview(collectionView)
         view.addSubview(searchBar)
+        view.addSubview(activityIndicator)
 
         searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: paddings.top).isActive = true
         searchBar.leftAnchor.constraint(equalTo: view.leftAnchor, constant: paddings.left).isActive = true
@@ -70,14 +82,9 @@ final class OrderFeedViewController: UIViewController {
         collectionView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         collectionView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    }
 
-    private func bindView() {
-        collectionView.rx.itemSelected.subscribe(onNext: { _ in
-            let vc = OrderCardViewController()
-            vc.setup()
-            self.pushToRoot(vc: vc)
-        }).disposed(by: dis)
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
 }
 
@@ -101,94 +108,82 @@ extension OrderFeedViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-// TODO: Не забыть удалить когда будет подключение к беку
-extension OrderFeedViewController: UICollectionViewDataSource {
-    var testData: [OrderPreview] {
-        return [
-            OrderPreview(
-                title: "Стрижка кота",
-                price: "500 ₽",
-                city: "г. Москва",
-                metroStation: "Водный стадион",
-                metroColor: "#1FBF2F",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Томас",
-                animalDesciption: "Кот, Британец",
-                animalImageLink: "https://klike.net/uploads/posts/2019-06/medium/1561011184_2.jpg"
-            ),
-            OrderPreview(
-                title: "Стрижка cобаки",
-                price: "1000 ₽",
-                city: "г. Москва",
-                metroStation: "Пражская",
-                metroColor: "#808080",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Бобик",
-                animalDesciption: "Собака, маленький зверенок",
-                animalImageLink: "https://placepic.ru/wp-content/uploads/2019/06/7733.jpg"
-            ),
-            OrderPreview(
-                title: "Стрижка пиписьки",
-                price: "1000 ₽",
-                city: "г. Москва",
-                metroStation: "Пражская",
-                metroColor: "#808080",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Сучка",
-                animalDesciption: "Собака, реальная сучка",
-                animalImageLink: "https://placepic.ru/wp-content/uploads/2019/06/7733.jpg"
-            ),
-            OrderPreview(
-                title: "Стрижка собаки",
-                price: "1000 ₽",
-                city: "г. Москва",
-                metroStation: "Пражская",
-                metroColor: "#808080",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Сучка",
-                animalDesciption: "Собака, реальная сучка",
-                animalImageLink: "https://placepic.ru/wp-content/uploads/2019/06/7733.jpg"
-            ),
-            OrderPreview(
-                title: "Стрижка собаки",
-                price: "1000 ₽",
-                city: "г. Москва",
-                metroStation: "Пражская",
-                metroColor: "#808080",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Сучка",
-                animalDesciption: "Собака, реальная сучка",
-                animalImageLink: "https://placepic.ru/wp-content/uploads/2019/06/7733.jpg"
-            ),
-            OrderPreview(
-                title: "Стрижка собаки",
-                price: "1000 ₽",
-                city: "г. Москва",
-                metroStation: "Пражская",
-                metroColor: "#808080",
-                orderPeriod: "29 Дек. - 31 Дек. 2023",
-                publishDate: "Cегодня 9:34",
-                animalName: "Сучка",
-                animalDesciption: "Собака, реальная сучка",
-                animalImageLink: "https://placepic.ru/wp-content/uploads/2019/06/7733.jpg"
-            )
-        ]
+// MARK: bind viewcontroller to viewmodel
+extension OrderFeedViewController: BindableView {
+    typealias ViewModelType = OrderFeedViewModel
+
+    func createInput() -> OrderFeedViewModel.Input {
+
+        let viewDidLoad = rx.sentMessage(#selector(UIViewController.viewDidLoad))
+            .mapToVoid()
+            .asDriverOnErrorJustComplete()
+
+        let dataWillRetry = refreshControl.rx.controlEvent(.valueChanged)
+            .mapToVoid()
+            .asDriverOnErrorJustComplete()
+
+        let initDataTrigger = Driver.merge(viewDidLoad, dataWillRetry)
+
+        let fetchDataTrigger = collectionView.rx.willDisplayCell.asDriver().flatMap { (_, indexPathCurentOrder) in
+            let idxCurrentOrder = indexPathCurentOrder.item
+            let idxLastOrder = self.collectionView.numberOfItems(inSection: 0) - 1
+
+            return Observable<Void>.create { observer in
+                if idxCurrentOrder > idxLastOrder - 15 { observer.onNext(Void()) }
+                return Disposables.create()
+            }.mapToVoid().asDriverOnErrorJustComplete()
+        }.throttle(.milliseconds(500), latest: false)
+
+        let itemSelectTrigger = self.collectionView.rx.itemSelected.asDriver()
+
+        return .init(
+            initDataTrigger: initDataTrigger.debug("init data trigger", trimOutput: true),
+            fetchDataTrigger: fetchDataTrigger.debug("fetch data trigger", trimOutput: true),
+            itemSelectTrigger: itemSelectTrigger.debug("item select trigger", trimOutput: true)
+        )
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return testData.count
+    func bind(to viewModel: OrderFeedViewModel) {
+        let input = createInput()
+        let output = viewModel.transform(input: input)
+
+        output.dataLoaded
+            .drive(onNext: { self.refreshControl.endRefreshing() })
+            .disposed(by: disposeBag)
+
+        output.items.map { [CustomSectionModel(key: "orderSection", items: $0)] }
+            .drive(collectionView.rx.items(dataSource: createDataSource()))
+            .disposed(by: disposeBag)
+
+        output.itemSelected.drive().disposed(by: disposeBag)
+
+        output.activityIndicator.drive(onNext: { isActive in
+                if isActive {
+                    self.activityIndicator.startAnimating()
+                    self.activityIndicator.show(animated: true)
+                } else {
+                    self.activityIndicator.hide(animated: true) { _ in self.activityIndicator.stopAnimating() }
+                }
+            }).disposed(by: disposeBag)
+
+        // TODO: Сделать обработку ошибок на ui
+        output.errors.drive(onNext: { _ in
+            print("Ошибка при загрузке карточки заказа")
+        }).disposed(by: disposeBag)
     }
+}
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
-        let cell: OrderPreviewCell = collectionView.createCell(by: indexPath)
-        cell.setup(with: testData[indexPath.item])
-
-        return cell
+// MARK: datasource
+extension OrderFeedViewController {
+    private func createDataSource() -> RxCollectionViewSectionedAnimatedDataSource<CustomSectionModel<OrderPreview>> {
+        return .init(
+// TODO: Необходимо продумать механизм определения отпускания экрана при обновлении, и сеттинге данных только после этого
+            decideViewTransition: { _, _, _ in return .reload },
+            configureCell: { _, cv, indexPath, item in
+                let cell: OrderPreviewCell = cv.createCell(by: indexPath)
+                cell.setup(with: item)
+                return cell
+            }
+        )
     }
 }

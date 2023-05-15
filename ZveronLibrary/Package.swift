@@ -43,7 +43,7 @@ let packageDependencies: [Package.Dependency] = [
        // url: "https://github.com/ZveronHSE/contract.git",
        // from: "1.9.0"
         url: "https://github.com/Galaximum/contract.git",
-        from: "1.4.0"
+        from: "1.6.0"
       ),
     .package(
         url: "https://github.com/ReactiveX/RxSwift.git",

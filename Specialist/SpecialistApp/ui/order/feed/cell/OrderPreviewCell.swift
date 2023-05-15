@@ -11,7 +11,7 @@ import SpecialistDomain
 import Kingfisher
 
 final class OrderPreviewCell: UICollectionViewCell, ReusableCell {
-    static var cellSize: CGSize = CGSize(width: 0, height: 130)
+    static var cellSize: CGSize = CGSize(width: 255, height: 130)
     public static let reuseID = "orderCell"
 
     private lazy var shadowView: UIView = {
@@ -122,20 +122,28 @@ final class OrderPreviewCell: UICollectionViewCell, ReusableCell {
     }
 
     public override func layoutSubviews() {
+        animalImage.layoutIfNeeded()
+        metroStationColor.layoutIfNeeded()
         animalImage.layer.cornerRadius = animalImage.frame.size.width / 2
         metroStationColor.layer.cornerRadius = metroStationColor.frame.size.width / 2
     }
 
     public func setup(with model: OrderPreview) {
         titleLabel.text = model.title
-        cityLabel.text = model.city
-        metroStationLabel.text = model.metroStation
-        orderPeriodLabel.text = model.orderPeriod
-        animalNameLabel.text = model.animalName
-        animalDescriptionLabel.text = model.animalDesciption
+        cityLabel.text = model.address.town
+        metroStationLabel.text = model.address.station
+        orderPeriodLabel.text = model.serviceDate
+        animalNameLabel.text = model.animal.name
+        animalDescriptionLabel.text = model.animal.breed + ", " + model.animal.species
         priceLabel.text = model.price
-        publishDateLabel.text = model.publishDate
-        metroStationColor.backgroundColor = UIColor(hexString: model.metroColor)
-        animalImage.kf.setImage(with: URL(string: model.animalImageLink)!)
+        publishDateLabel.text = model.createdDate
+        metroStationColor.backgroundColor = UIColor(hexString: model.address.color)
+        animalImage.kf.setImage(with: model.animal.imageUrl)
     }
+}
+
+extension OrderPreview: SectionItemType {
+    public var identity: Int { self.id }
+
+    public static func == (lhs: OrderPreview, rhs: OrderPreview) -> Bool { lhs.id == rhs.id }
 }

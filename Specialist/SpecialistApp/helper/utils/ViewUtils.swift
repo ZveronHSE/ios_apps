@@ -54,3 +54,11 @@ enum NavigationButtonType {
     case close
     case setting
 }
+
+func createActivityIndicator<T: UIActivityIndicatorView>(transorm: ((T) -> Void)? = nil) -> T {
+    let view = T(style: .large)
+    transorm?(view)
+    view.hide(animated: false)
+    view.translatesAutoresizingMaskIntoConstraints = false
+    return view
+}
