@@ -24,7 +24,7 @@ class FavoriteTypeCell: UICollectionViewCell {
 
     var label: UILabel = {
         let label = UILabel()
-        label.font = Font.robotoReqular12
+        label.font = Font.robotoRegular12
         label.textColor = Color1.gray5
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false

@@ -28,7 +28,7 @@ class FavoriteHeaderView: UIView {
     private var favoriteTypesCellHeight: CGFloat {
         let pandingHeight = 12.0
         let text = FavoriteSourceType.vendor.getUIDesc()
-        return text.height(constraintedWidth: 0, font: Font.robotoReqular12) + pandingHeight * 2
+        return text.height(constraintedWidth: 0, font: Font.robotoRegular12) + pandingHeight * 2
     }
 
     private var pageName: UILabel = {
@@ -144,7 +144,7 @@ extension FavoriteHeaderView: UICollectionViewDelegateFlowLayout, UICollectionVi
 
         let pandingWidth = 24.0
         let text = FavoriteSourceType.allCases[indexPath.item].getUIDesc()
-        let currentWidth = text.width(constraintedHeight: 0, font: Font.robotoReqular12) + pandingWidth * 2
+        let currentWidth = text.width(constraintedHeight: 0, font: Font.robotoRegular12) + pandingWidth * 2
 
         return CGSize(width: currentWidth, height: favoriteTypesCellHeight)
     }

@@ -16,6 +16,7 @@ public struct Font {
     public static let robotoSemiBold28: UIFont = UIFont(name: "Roboto-Bold", size: 28)!
     public static let robotoSemiBold20: UIFont = UIFont(name: "Roboto-Bold", size: 20)!
     public static let robotoSemiBold14: UIFont = UIFont(name: "Roboto-Bold", size: 14)!
+    public static let robotoSemiBold12: UIFont = UIFont(name: "Roboto-Bold", size: 12)!
 
     // MARK: MEDIUM
 
@@ -30,8 +31,9 @@ public struct Font {
     public static let robotoRegular18: UIFont = UIFont(name: "Roboto-Regular", size: 18)!
     public static let robotoRegular16: UIFont = UIFont(name: "Roboto-Regular", size: 16)!
     public static let robotoRegular14: UIFont = UIFont(name: "Roboto-Regular", size: 14)!
-    public static let robotoReqular13: UIFont = UIFont(name: "Roboto-Regular", size: 13)!
-    public static let robotoReqular12: UIFont = UIFont(name: "Roboto-Regular", size: 12)!
+    public static let robotoRegular13: UIFont = UIFont(name: "Roboto-Regular", size: 13)!
+    public static let robotoRegular12: UIFont = UIFont(name: "Roboto-Regular", size: 12)!
+    public static let robotoRegular10: UIFont = UIFont(name: "Roboto-Regular", size: 10)!
 
     // MARK: LIGHT
     
