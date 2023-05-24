@@ -115,8 +115,13 @@ class ChatListViewController: UIViewControllerWithAuth, UICollectionViewDelegate
         let chat = ChatManager.shared.chatList[indexPath.row]
         let messageVC = ChatMessageViewController()
         messageVC.setup(with: chat)
+       // uWindow.rootViewController = UINavigationController(rootViewController: tabVC)
+        // pushToRoot(vc: messageVC)
+        messageVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(messageVC, animated: true)
     }
+    
+
     
     // MARK: - Collection view flow layout
     

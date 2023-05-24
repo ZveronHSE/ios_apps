@@ -98,8 +98,12 @@ class ChatMessageViewController: UIViewController, UICollectionViewDelegateFlowL
         collectionView.delegate = self
         collectionView.dataSource = self
         //navigationItem.title = chat.name
+        
+        
+        
         navigationItem.setTitleView(title: chat.name, subtitle: "Был последний раз 5 минут назад", imageName: "onboarding1")
-        navigationController?.navigationBar.backgroundColor = Color1.white
+
+        
         
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBtn)
@@ -146,6 +150,7 @@ class ChatMessageViewController: UIViewController, UICollectionViewDelegateFlowL
     
     func bindViews() {
         backBtn.rx.tap.bind(onNext: {
+           // self.popFromRoot()
             self.navigationController?.popViewController(animated: true)
         }).disposed(by: disposeBag)
     }
@@ -245,28 +250,26 @@ extension UINavigationItem {
         firstLabel.textColor = Color1.gray5
         firstLabel.font = Font.robotoSemiBold14
         firstLabel.textAlignment = .left
-        firstLabel.sizeToFit()
+
         
         let secondLabel = UILabel()
         secondLabel.text = subtitle
         secondLabel.textColor = Color1.gray5
         secondLabel.font = Font.robotoLight12
         secondLabel.textAlignment = .left
-        secondLabel.sizeToFit()
+
         
         let stackView = UIStackView(arrangedSubviews: [firstLabel, secondLabel])
         stackView.distribution = .equalCentering
         stackView.axis = .vertical
         stackView.spacing = 5
         //stackView.alignment = .center
-        
-        let width = max(firstLabel.frame.size.width, secondLabel.frame.size.width)
+        firstLabel.layoutIfNeeded()
+        secondLabel.layoutIfNeeded()
+        let width = max(firstLabel.text!.width(constraintedHeight: 0, font: firstLabel.font), secondLabel.text!.width(constraintedHeight: 0, font: secondLabel.font))
         stackView.frame = CGRect(x: 0, y: 0, width: width, height: 40)
         
-        firstLabel.sizeToFit()
-        secondLabel.sizeToFit()
-        
-        
+
         
         
         let image = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
@@ -282,6 +285,8 @@ extension UINavigationItem {
         image.heightAnchor.constraint(equalToConstant: 40).isActive = true
         image.widthAnchor.constraint(equalToConstant: 40).isActive = true
         
+        image.layoutIfNeeded()
+        
         let stackViewHorizontal: UIStackView = UIStackView(arrangedSubviews: [image, stackView])
         stackViewHorizontal.translatesAutoresizingMaskIntoConstraints = false
         stackViewHorizontal.isUserInteractionEnabled = false
@@ -291,14 +296,11 @@ extension UINavigationItem {
         stackViewHorizontal.spacing = 10
         stackViewHorizontal.frame = CGRect(x: 0, y: 0, width: width + image.frame.width, height: 40)
         
-        image.sizeToFit()
-        stackView.sizeToFit()
-        stackViewHorizontal.isLayoutMarginsRelativeArrangement = true
-        stackViewHorizontal.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 16)
-
+       
+        //stackViewHorizontal.isLayoutMarginsRelativeArrangement = true
+        //stackViewHorizontal.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 16)
         
-        
-        
+       // stackViewHorizontal.layoutIfNeeded()
         self.titleView = stackViewHorizontal
     }
 }
