@@ -21,7 +21,7 @@ public protocol FavoriteUseCaseProtocol {
     func removeProfile(with id: Int64) -> Observable<Void>
 
     // Получение списка избранных профилей пользователя
-    func getProfiles() -> Observable<[ProfileSummary]>
+    func getProfiles() -> Observable<[FavoritesGRPC.ProfileSummary]>
 
     // Удаление всех объявлений с определенным статусом из категории
     func deleteCosedLotsByCategory(categoryId: Int32) -> Observable<Void>

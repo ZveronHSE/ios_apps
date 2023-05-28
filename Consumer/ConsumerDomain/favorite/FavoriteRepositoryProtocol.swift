@@ -25,7 +25,7 @@ public protocol FavoriteRepositoryProtocol {
     func removeProfile(with id: Int64) -> Observable<Void>
 
     // Получение списка избранных профилей пользователя
-    func getProfiles() -> Observable<[ProfileSummary]>
+    func getProfiles() -> Observable<[FavoritesGRPC.ProfileSummary]>
 
     // Удаление всех объявлений с определенным статусом из категории
     func deleteLotsByStatusAndCategory(categoryId: Int32, status: Status) -> Observable<Void>

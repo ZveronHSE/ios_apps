@@ -147,7 +147,9 @@ final class OrderCardViewController: UIViewController {
 // MARK: header view
 fileprivate final class HeaderView: UIView {
 
-    private lazy var titleLabel: UILabel = createLabel(with: .zvBlack, and: .zvMediumTitle2)
+    private lazy var titleLabel: UILabel = createLabel(with: .zvBlack, and: .zvMediumTitle2) {
+        $0.numberOfLines = 0
+    }
     private lazy var priceLabel: UILabel = createLabel(with: .zvBlack, and: .zvMediumTitle2)
     private lazy var publishDateLabel: UILabel = createLabel(with: .zvGray3, and: .zvRegularCaption1)
 
@@ -162,12 +164,13 @@ fileprivate final class HeaderView: UIView {
 
         titleLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
         titleLabel.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        titleLabel.widthAnchor.constraint(equalToConstant: 250).isActive = true
 
         priceLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4).isActive = true
         priceLabel.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         priceLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
 
-        publishDateLabel.bottomAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
+        publishDateLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         publishDateLabel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     }
 

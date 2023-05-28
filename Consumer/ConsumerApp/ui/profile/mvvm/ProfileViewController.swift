@@ -158,8 +158,6 @@ class ProfileViewController: UIViewControllerWithAuth {
         super.viewDidLoad()
         layout()
         bindViews()
-        self.viewModel.isLoadedInfo.onNext(false)
-        viewModel.loadProfileInfo()
     }
     
     override func viewDidLayoutSubviews() {
@@ -174,7 +172,9 @@ class ProfileViewController: UIViewControllerWithAuth {
     
     // каждый раз при открытии экрана
     override func viewWillAppear(_ animated: Bool) {
-        //viewModel.loadProfileInfo()
+        super.viewWillAppear(animated)
+        self.viewModel.isLoadedInfo.onNext(false)
+        viewModel.loadProfileInfo()
     }
     
     func layout() {
@@ -256,8 +256,7 @@ class ProfileViewController: UIViewControllerWithAuth {
                 self.profileInfo = $0
                 self.nameUser.text = $0.surname + " " + $0.name
                 self.ratingUser.rating = $0.rating
-                // TODO: Реализовать когда на беке появиться возможность получать фотки
-                self.imageUser.kf.setImage(with: URL(string: "https://mirpozitiva.ru/wp-content/uploads/2019/11/1472042978_32.jpg"))
+                self.imageUser.kf.setImage(with: URL(string: $0.imageUrl))
                 self.viewModel.isLoadedInfo.onNext(true)
             }).disposed(by: disposeBag)
         

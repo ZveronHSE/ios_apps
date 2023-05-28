@@ -16,32 +16,103 @@ import RxSwift
 import SwiftProtobuf
 import UIKit
 import OrderGRPC
+import ChatGRPC
 
 public class Apigateway {
-    public init() { }
-
+    
+    public init() {
+        self.clientChat = try! openConnectionChat()
+    }
+    
     private let disposeBag = DisposeBag()
     private let backgroundQueue = DispatchQueue(label: "ru.zveron.api_queue", qos: .utility, attributes: .concurrent)
-
+    
     private struct ConnectionConfig {
         fileprivate static let host = "zveron.ru"
         fileprivate static let port = 80
         fileprivate static let transportSecurity = GRPCChannelPool.Configuration.TransportSecurity.plaintext
         fileprivate static let timeoutSeconds: Int64 = 3
     }
-
+    
     typealias Connection = (group: MultiThreadedEventLoopGroup, channel: GRPCChannel)
-
+    
+    private var clientChat: ApigatewayServiceClient!
+    
+    private var callChat: BidirectionalStreamingCall<ApiGatewayRequest, ApigatewayResponse>!
+    
+//    private lazy var handler: (ApigatewayResponse) -> Void = {
+//        let responseServer = try! ChatRouteResponse.init(jsonUTF8Data: $0.responseBody).response
+//        DispatchQueue.main.async {
+//            self.responseFromServer.onNext(responseServer!)
+//        }
+//    }
+    
+    let responseFromServer: PublishSubject<ChatRouteResponse.OneOf_Response> = PublishSubject()
+    
+    
+    
+    private func initCallChat() -> BidirectionalStreamingCall<ApiGatewayRequest, ApigatewayResponse> {
+        var headers: [(String, String)] = []
+        
+        // dont add access_token for renew tokens method
+        TokenAcquisitionService.shared.getToken().flatMap {
+            headers.append(("access_token", $0.accessToken.token))
+        }
+        
+        let options = CallOptions.init(
+            customMetadata: HPACKHeaders(headers),
+            timeLimit: .timeout(.seconds(120))
+        )
+        return clientChat.bidiStreamApiGateway(callOptions: options, handler: {
+            let responseServer = try! ChatRouteResponse.init(jsonUTF8Data: $0.responseBody).response
+            DispatchQueue.main.async {
+                self.responseFromServer.onNext(responseServer!)
+            }
+        })
+    }
+    
+    
+    public func getMessages() -> Observable<ChatRouteResponse.OneOf_Response> {
+        //initCallChat()
+        return responseFromServer.asObservable()
+    }
+    
+    public func sendMessages(request: ChatRouteRequest.OneOf_Request) -> Observable<Void> {
+        
+        
+        return Observable.create { observer in
+            self.callChat = self.initCallChat()
+            // try to create request to apigateway
+            self.backgroundQueue.async {
+                let request = try! ApiGatewayRequest.with {
+                    $0.requestBody = try! ChatRouteRequest.with({$0.request = request}).jsonUTF8Data()
+                    $0.methodAlias = "bidiChatRoute"
+                }
+                self.callChat.sendMessage(request, promise: nil)
+                //self.callChat.sendEnd()
+                try! self.callChat.status.wait()
+                DispatchQueue.main.async {
+                    observer.onNext(Void())
+                }
+                
+            }
+            
+            print(request)
+            
+            return Disposables.create()
+        }
+    }
+    
     // MARK: BASIC CALL TO APIGATEWAY
-    private func call<T: Message, U: Message>(
+    private func call<T: SwiftProtobuf.Message, U: SwiftProtobuf.Message>(
         returnType: U.Type,
         requestBody: T,
         methodAlies: String,
         _ completion: @escaping (Result<U, NetworkError>) -> Void
     ) {
-
+        
         backgroundQueue.async {
-
+            
             do {
                 print("Started request:\(methodAlies)")
 
@@ -49,35 +120,35 @@ public class Apigateway {
 
                 // try to open connection
                 let (connection, client) = try self.openConnection()
-
+                
                 // try to create request to apigateway
                 let request = try ApiGatewayRequest.with {
                     $0.requestBody = try requestBody.jsonUTF8Data()
                     $0.methodAlias = methodAlies
                 }
-
+                
                 var headers: [(String, String)] = []
-
+                
                 // dont add access_token for renew tokens method
                 if methodAlies != "authIssueNewTokens" {
                     TokenAcquisitionService.shared.getToken().flatMap {
                         headers.append(("access_token", $0.accessToken.token))
                     }
                 }
-
+                
                 let options = CallOptions.init(
                     customMetadata: HPACKHeaders(headers),
                     timeLimit: .timeout(.seconds(ConnectionConfig.timeoutSeconds))
                 )
-
+                
                 // call to apigateway and await response with metadata
                 // makeCallApiGatewayCall(request, callOptions: options)
                 let call = client.callApiGateway(request, callOptions: options)
                 let response = try call.response.wait().responseBody
-
+                
                 // try to deserialization response
                 let responseBody = try U.init(jsonUTF8Data: response)
-
+                
                 // try to close connection
                 try self.closeConnection(connection)
 
@@ -95,9 +166,9 @@ public class Apigateway {
             }
         }
     }
-
-// MARK: REACTIVE CALL TO APIGATEWAY
-    private func call<T: Message, U: Message>(
+    
+    // MARK: REACTIVE CALL TO APIGATEWAY
+    private func call<T: SwiftProtobuf.Message, U: SwiftProtobuf.Message>(
         returnType: U.Type,
         requestBody: T,
         methodAlies: String
@@ -115,41 +186,41 @@ public class Apigateway {
             return Disposables.create()
         }
     }
-
-/// Основной реактивный метод по вызову соответствующего ресурса у backend
-///
-/// - Parameters:
-///     - returnType: Тип возвращаемого респонза от бекенда
-///     - requestBody: Реквест соответствующий определенной ручке бекенда
-///     - methodAlies: Строка идентификатор соответствующей ручки
-///
-///     - Returns: Наблюдаемый с типов значения returnType
-    public func callWithRetry<T: Message, U: Message>(
+    
+    /// Основной реактивный метод по вызову соответствующего ресурса у backend
+    ///
+    /// - Parameters:
+    ///     - returnType: Тип возвращаемого респонза от бекенда
+    ///     - requestBody: Реквест соответствующий определенной ручке бекенда
+    ///     - methodAlies: Строка идентификатор соответствующей ручки
+    ///
+    ///     - Returns: Наблюдаемый с типов значения returnType
+    public func callWithRetry<T: SwiftProtobuf.Message, U: SwiftProtobuf.Message>(
         returnType: U.Type,
         requestBody: T,
         methodAlies: String
     ) -> Observable<U> {
         return call(returnType: returnType, requestBody: requestBody, methodAlies: methodAlies)
             .retry { errorObservable -> Observable<Void> in
-            errorObservable.flatMap { error in
-                guard let error = error as? NetworkError else { fatalError("this flow must only handle a Network error") }
-
-                switch error {
-                case .unauthenticated: return self.renewToken()
-                default: return Observable.error(error)
+                errorObservable.flatMap { error in
+                    guard let error = error as? NetworkError else { fatalError("this flow must only handle a Network error") }
+                    
+                    switch error {
+                    case .unauthenticated: return self.renewToken()
+                    default: return Observable.error(error)
+                    }
                 }
             }
-        }
     }
-
-/// Основной реактивный метод по вызову соответствующего ресурса у backend
-/// Вызывается в случае пустого тела ответа
-/// - Parameters:
-///     - requestBody: Реквест соответствующий определенной ручке бекенда
-///     - methodAlies: Строка идентификатор соответствующей ручки
-///
-///     - Returns: Наблюдаемый с пустым типом значения
-    public func callWithRetry<T: Message>(
+    
+    /// Основной реактивный метод по вызову соответствующего ресурса у backend
+    /// Вызывается в случае пустого тела ответа
+    /// - Parameters:
+    ///     - requestBody: Реквест соответствующий определенной ручке бекенда
+    ///     - methodAlies: Строка идентификатор соответствующей ручки
+    ///
+    ///     - Returns: Наблюдаемый с пустым типом значения
+    public func callWithRetry<T: SwiftProtobuf.Message>(
         requestBody: T,
         methodAlies: String
     ) -> Observable<Void> {
@@ -159,16 +230,16 @@ public class Apigateway {
             methodAlies: methodAlies
         ).map { _ in Void() }
     }
-
-/// Основной реактивный метод по вызову соответствующего ресурса у backend
-/// Вызывается в случае пустого тела запроса
-///
-/// - Parameters:
-///     - returnType: Тип возвращаемого респонза от бекенда
-///     - methodAlies: Строка идентификатор соответствующей ручки
-///
-///     - Returns: Наблюдаемый с типов значения returnType
-    public func callWithRetry<U: Message>(
+    
+    /// Основной реактивный метод по вызову соответствующего ресурса у backend
+    /// Вызывается в случае пустого тела запроса
+    ///
+    /// - Parameters:
+    ///     - returnType: Тип возвращаемого респонза от бекенда
+    ///     - methodAlies: Строка идентификатор соответствующей ручки
+    ///
+    ///     - Returns: Наблюдаемый с типов значения returnType
+    public func callWithRetry<U: SwiftProtobuf.Message>(
         returnType: U.Type,
         methodAlies: String
     ) -> Observable<U> {
@@ -193,37 +264,37 @@ public class Apigateway {
             methodAlies: methodAlies
         ).map { _ in Void() }
     }
-
-/// renewToken if response to endpoint return a .unauthenticated(16) state
+    
+    /// renewToken if response to endpoint return a .unauthenticated(16) state
     private func renewToken() -> Observable<Void> {
         // check for main thread that the process of updating was started early
         if TokenAcquisitionService.shared.isUpdating { return Observable.just(Void()) }
-
+        
         // set updating state
         TokenAcquisitionService.shared.isUpdating = true
-
+        
         // Lock the resource on main thread
         TokenAcquisitionService.shared.lock()
-
+        
         let request = IssueNewTokensRequest.with {
             $0.refreshToken = TokenAcquisitionService.shared.getToken()?.refreshToken.token ?? "empty-token"
             $0.deviceFp = UIDevice.current.identifierForVendor!.uuidString
         }
-
+        
         return self.call(returnType: MobileToken.self, requestBody: request, methodAlies: "authIssueNewTokens")
             .do(
-            onNext: {
-                TokenAcquisitionService.shared.isUpdating = false
-                TokenAcquisitionService.shared.setToken(token: $0)
-                TokenAcquisitionService.shared.unlock()
-            },
-            onError: { _ in
-                TokenAcquisitionService.shared.isUpdating = false
-                TokenAcquisitionService.shared.unlock()
-            }
-        ).map { _ in Void() }
+                onNext: {
+                    TokenAcquisitionService.shared.isUpdating = false
+                    TokenAcquisitionService.shared.setToken(token: $0)
+                    TokenAcquisitionService.shared.unlock()
+                },
+                onError: { _ in
+                    TokenAcquisitionService.shared.isUpdating = false
+                    TokenAcquisitionService.shared.unlock()
+                }
+            ).map { _ in Void() }
     }
-
+    
     private func openConnection() throws -> (Connection, ApigatewayServiceNIOClient) {
         do {
             let group = MultiThreadedEventLoopGroup(numberOfThreads: 3)
@@ -237,7 +308,30 @@ public class Apigateway {
             throw NetworkError.connectionOpenFailed(cause: error)
         }
     }
-
+    
+    
+    private func openConnectionChat() throws -> ApigatewayServiceClient {
+        do {
+            let group = PlatformSupport.makeEventLoopGroup(loopCount: 3)
+            let channel = try GRPCChannelPool.with(
+                target: .hostAndPort(ConnectionConfig.host, ConnectionConfig.port),
+                transportSecurity: ConnectionConfig.transportSecurity,
+                eventLoopGroup: group
+            )
+            {
+                $0.keepalive = .init(interval: .seconds(150), timeout: .seconds(120), permitWithoutCalls: true)
+            }
+            let routeGuide = ApigatewayServiceClient(channel: channel)
+//            defer {
+//                try! group.syncShutdownGracefully()
+//            }
+            
+            return routeGuide
+        } catch {
+            throw NetworkError.connectionOpenFailed(cause: error)
+        }
+    }
+    
     private func closeConnection(_ connection: Connection) throws {
         do {
             try connection.channel.close().wait()
@@ -252,7 +346,7 @@ private extension Error {
     func toNetworkError() -> NetworkError {
         // internal errors
         if let error = self as? NetworkError { return error }
-
+        
         // server errors
         if let error = (self as? GRPCStatusTransformable)?.makeGRPCStatus() {
             print(error.message)
@@ -276,7 +370,7 @@ private extension Error {
             default: break
             }
         }
-
+        
         // unexpected errors
         return NetworkError.unexpectedError(cause: self)
     }

@@ -15,7 +15,7 @@ class ChatListViewCell: UICollectionViewCell {
         imgView.layer.masksToBounds = false
         imgView.clipsToBounds = true
         imgView.layer.cornerRadius = imgView.frame.height/2
-        imgView.contentMode = .scaleAspectFit
+        imgView.contentMode = .scaleAspectFill
         imgView.translatesAutoresizingMaskIntoConstraints = false
         imgView.backgroundColor = .gray
         imgView.layer.borderWidth = 2
@@ -27,7 +27,7 @@ class ChatListViewCell: UICollectionViewCell {
         let imgView = UIImageView()
         imgView.layer.masksToBounds = false
         imgView.clipsToBounds = true
-        imgView.contentMode = .scaleAspectFit
+        imgView.contentMode = .scaleAspectFill
         imgView.translatesAutoresizingMaskIntoConstraints = false
         imgView.backgroundColor = .gray
         return imgView
@@ -79,23 +79,23 @@ class ChatListViewCell: UICollectionViewCell {
         return label
     }()
     
-    var countMessagesLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 18, height: 18))
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.font = Font.robotoRegular10
-        label.textColor = Color1.black
-        label.layer.masksToBounds = true
-        label.layer.cornerRadius = label.frame.height/2
-        return label
-    }()
-    
-    var viewTest: UIView = {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 18, height: 18))
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = view.frame.height/2
-        return view
-    }()
+//    var countMessagesLabel: UILabel = {
+//        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 18, height: 18))
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        label.textAlignment = .center
+//        label.font = Font.robotoRegular10
+//        label.textColor = Color1.black
+//        label.layer.masksToBounds = true
+//        label.layer.cornerRadius = label.frame.height/2
+//        return label
+//    }()
+//
+//    var viewCountMessages: UIView = {
+//        let view = UIView(frame: CGRect(x: 0, y: 0, width: 18, height: 18))
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        view.layer.cornerRadius = view.frame.height/2
+//        return view
+//    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -133,17 +133,17 @@ class ChatListViewCell: UICollectionViewCell {
         dateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         dateLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -6).isActive = true
         
-        contentView.addSubview(viewTest)
-        viewTest.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6).isActive = true
-        viewTest.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -6).isActive = true
-        viewTest.widthAnchor.constraint(equalToConstant: 18).isActive = true
-        viewTest.heightAnchor.constraint(equalToConstant: 18).isActive = true
-        
-        contentView.addSubview(countMessagesLabel)
-        countMessagesLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6).isActive = true
-        countMessagesLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -6).isActive = true
-        countMessagesLabel.widthAnchor.constraint(equalToConstant: 18).isActive = true
-        countMessagesLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
+//        contentView.addSubview(viewCountMessages)
+//        viewCountMessages.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6).isActive = true
+//        viewCountMessages.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -6).isActive = true
+//        viewCountMessages.widthAnchor.constraint(equalToConstant: 18).isActive = true
+//        viewCountMessages.heightAnchor.constraint(equalToConstant: 18).isActive = true
+//        
+//        contentView.addSubview(countMessagesLabel)
+//        countMessagesLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6).isActive = true
+//        countMessagesLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -6).isActive = true
+//        countMessagesLabel.widthAnchor.constraint(equalToConstant: 18).isActive = true
+//        countMessagesLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
         
     }
     
@@ -151,11 +151,11 @@ class ChatListViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        viewTest.layoutIfNeeded()
-        viewTest.applyGradient(.mainButton, .horizontal)
-    }
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//        viewCountMessages.layoutIfNeeded()
+//        viewCountMessages.applyGradient(.mainButton, .horizontal)
+//    }
     
     
 }

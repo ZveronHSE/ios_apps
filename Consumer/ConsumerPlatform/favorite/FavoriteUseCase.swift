@@ -36,7 +36,7 @@ public final class FavoriteUseCase: FavoriteUseCaseProtocol {
             .mapErrors(default: FavoriteError.failedRemoveItem)
     }
 
-    public func getProfiles() -> Observable<[ProfileSummary]> {
+    public func getProfiles() -> Observable<[FavoritesGRPC.ProfileSummary]> {
         return favoriteRepository.getProfiles()
             .mapErrors(default: FavoriteError.failedLoad)
     }

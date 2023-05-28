@@ -10,7 +10,7 @@ public struct ProfileInfo {
     public let id: UInt64
     public let name: String
     public let surname: String
-    public let imageUrl: String
+    public var imageUrl: String
     public let rating: Double
     public let address: Address
     

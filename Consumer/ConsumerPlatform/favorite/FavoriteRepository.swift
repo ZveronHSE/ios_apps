@@ -42,7 +42,7 @@ public final class FavoriteRepository: FavoriteRepositoryProtocol {
         return remote.removeProfile(request: request)
     }
 
-    public func getProfiles() -> Observable<[ProfileSummary]> {
+    public func getProfiles() -> Observable<[FavoritesGRPC.ProfileSummary]> {
         return remote.getProfiles().map { $0.favoriteProfiles }
     }
 

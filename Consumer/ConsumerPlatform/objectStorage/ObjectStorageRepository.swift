@@ -11,13 +11,17 @@ import RxSwift
 import ObjectstorageGRPC
 
 public class ObjectStorageRepository: ObjectStorageRepositoryProtocol {
-    public func uploadImage(image: Data, type: ObjectstorageGRPC.MimeType) -> RxSwift.Observable<String> {
-        return data.uploadImage(image: image, type: type)
-    }
-
     let data: ObjectStorageDataSourceProtocol
 
     public init(data: ObjectStorageDataSourceProtocol) {
         self.data = data
+    }
+    
+    public func uploadImage(image: Data, type: ObjectstorageGRPC.MimeType) -> RxSwift.Observable<String> {
+        return data.uploadImage(image: image, type: type)
+    }
+
+    public func uploadImageProfile(image: Data, type: ObjectstorageGRPC.MimeType) -> RxSwift.Observable<String> {
+        return data.uploadImageProfile(image: image, type: type)
     }
 }

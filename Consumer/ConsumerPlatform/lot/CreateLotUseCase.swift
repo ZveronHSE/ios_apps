@@ -12,6 +12,7 @@ import ParameterGRPC
 import ConsumerDomain
 import RxSwift
 import ObjectstorageGRPC
+import CoreGRPC
 
 public final class CreateLotUseCase: CreateLotUseCaseProtocol {
     private let objectRepository: ObjectStorageRepositoryProtocol
@@ -50,4 +51,11 @@ public final class CreateLotUseCase: CreateLotUseCaseProtocol {
     public func uploadImage(image: Data, type: ObjectstorageGRPC.MimeType) -> RxSwift.Observable<String> {
         return objectRepository.uploadImage(image: image, type: type)
     }
+    
+    public func getOwnLots() -> Observable<([CoreGRPC.Lot], LotGRPC.LastLot)> {
+        return lotRepository.getOwnLots()
+            .mapErrors(default: LotError.failedGetOwnLots)
+
+    }
+    
 }

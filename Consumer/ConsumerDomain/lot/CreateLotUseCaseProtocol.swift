@@ -10,6 +10,7 @@ import RxSwift
 import LotGRPC
 import ParameterGRPC
 import ObjectstorageGRPC
+import CoreGRPC
 // MARK: Класс взаимодействий при создании объявления
 public protocol CreateLotUseCaseProtocol {
     
@@ -26,4 +27,6 @@ public protocol CreateLotUseCaseProtocol {
     func getParameters(categoryId: Int32, lotFormId: Int32) -> Observable<[ParameterGRPC.Parameter]>
 
     func uploadImage(image: Data, type: MimeType) -> Observable<String>
+    
+    func getOwnLots() -> Observable<([CoreGRPC.Lot], LotGRPC.LastLot)>
 }

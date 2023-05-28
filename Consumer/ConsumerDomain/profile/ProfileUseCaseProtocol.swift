@@ -9,6 +9,7 @@ import Foundation
 import RxSwift
 //TODO: потом убрать ProfileGRPC после замены на entity
 import ProfileGRPC
+import ObjectstorageGRPC
 
 // MARK: Класс взаимодействий на экране профиля
 public protocol ProfileUseCaseProtocol {
@@ -39,4 +40,6 @@ public protocol ProfileUseCaseProtocol {
 
     // полный перечень животных
     func getAnimalsByProfile() -> Observable<[Animal]>
+    
+    func uploadImageProfile(image: Data, type: ObjectstorageGRPC.MimeType) -> Observable<String>
 }
