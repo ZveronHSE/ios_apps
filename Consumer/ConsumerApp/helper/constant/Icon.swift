@@ -24,6 +24,9 @@ struct Icon {
     static let empty: UIImage = #imageLiteral(resourceName: "unfavorite")
     static let star: UIImage = #imageLiteral(resourceName: "star_icon")
     static let starEmpty: UIImage = #imageLiteral(resourceName: "star_empty_icon")
+
+    static let unchecked: UIImage = #imageLiteral(resourceName: "Not_Selected_d")
+    static let checked: UIImage = #imageLiteral(resourceName: "Selected")
 }
 
 // MARK: Iterable icons

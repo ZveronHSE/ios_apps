@@ -19,7 +19,6 @@ extension OrderGRPC.FullOrder: MapperProtocol {
             animalPreview: self.animal.mapToModel(),
             title: self.title,
             price: self.price,
-            // TODO: Ждем фикса с бека
             createdDate: self.createdAt,
             address: self.address.mapToModel(),
             serviceDate: self.serviceDate,

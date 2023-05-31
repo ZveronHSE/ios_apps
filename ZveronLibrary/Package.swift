@@ -1,4 +1,4 @@
-// swift-tools-version:5.5.0
+// swift-tools-version:5.6.0
 import PackageDescription
 
 import class Foundation.ProcessInfo
@@ -43,7 +43,7 @@ let packageDependencies: [Package.Dependency] = [
        // url: "https://github.com/ZveronHSE/contract.git",
        // from: "1.9.0"
         url: "https://github.com/Galaximum/contract.git",
-        from: "1.6.0"
+        exact: "1.8.0"
       ),
     .package(
         url: "https://github.com/ReactiveX/RxSwift.git",

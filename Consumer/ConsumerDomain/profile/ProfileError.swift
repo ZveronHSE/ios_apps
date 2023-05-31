@@ -11,6 +11,7 @@ public enum ProfileError: Error {
     case failedLoadInfo
     case failedDeleteProfile
     case failedEditProfile
+    case failedLoadAnimals
 }
 
 extension ProfileError: LocalizedError {
@@ -19,6 +20,7 @@ extension ProfileError: LocalizedError {
         case .failedLoadInfo: return NSLocalizedString("не загрузилась информация Профиля", comment: "")
         case .failedDeleteProfile: return NSLocalizedString("не удалось удалить аккаунт", comment: "")
         case .failedEditProfile: return NSLocalizedString("не удалось изменить данные аккаунта", comment: "")
+        case .failedLoadAnimals: return NSLocalizedString("Не удалось загрузить ваших питомцев. Попробуйте еще раз", comment: "")
         default: return NSLocalizedString("", comment: "")
         }
     }

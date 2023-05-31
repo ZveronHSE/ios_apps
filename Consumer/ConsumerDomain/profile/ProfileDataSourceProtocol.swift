@@ -35,4 +35,7 @@ public protocol ProfileDataSourceProtocol {
 
     // Полное удаление профиля без возможности восстановления
     func deleteProfile() -> Observable<Void>
+
+    // полный перечень животных
+    func getAnimalsByProfile() -> Observable<[Animal]>
 }

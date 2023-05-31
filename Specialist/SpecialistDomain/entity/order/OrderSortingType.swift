@@ -8,8 +8,8 @@
 import Foundation
 
 public enum OrderSortingType: Int, CaseIterable {
-    case id
-    case dateCreated
+    case _default
+    case serviceDelivery
     case distance
     case price
 }

@@ -13,12 +13,12 @@ final class FavoriteViewSnapshotTests: SnapshotTestCase {
     var viewModel: FavoriteViewModelMock!
     var view: FavoriteViewController!
 
-    override func setUp() {
-        super.setUp()
-
-        viewModel = FavoriteViewModelMock()
-        view = FavoriteViewController()
-    }
+//    override func setUp() {
+//        super.setUp()
+//
+//        viewModel = FavoriteViewModelMock()
+//        view = FavoriteViewController()
+//    }
 
     func testFavoriteView_sourceTypeAnimalSelected() {
 
