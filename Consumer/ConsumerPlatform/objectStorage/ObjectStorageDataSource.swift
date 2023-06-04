@@ -13,6 +13,12 @@ import ObjectstorageGRPC
 
 
 public class ObjectStorageDataSource: ObjectStorageDataSourceProtocol {
+    let api: Apigateway
+
+    public init(api: Apigateway) {
+        self.api = api
+    }
+    
     public func uploadImage(image: Data, type: ObjectstorageGRPC.MimeType) -> RxSwift.Observable<String> {
         let request = UploadImageRequest.with {
             $0.body = image
@@ -23,9 +29,13 @@ public class ObjectStorageDataSource: ObjectStorageDataSourceProtocol {
         return api.callWithRetry(returnType: UploadImageResponse.self, requestBody: request, methodAlies: "objectStorageUploadImage").map { $0.imageURL }
     }
 
-    let api: Apigateway
+    public func uploadImageProfile(image: Data, type: ObjectstorageGRPC.MimeType) -> RxSwift.Observable<String> {
+        let request = UploadImageRequest.with {
+            $0.body = image
+            $0.mimeType = type
+            $0.flowSource = .profile
+        }
 
-    public init(api: Apigateway) {
-        self.api = api
+        return api.callWithRetry(returnType: UploadImageResponse.self, requestBody: request, methodAlies: "objectStorageUploadImage").map { $0.imageURL }
     }
 }

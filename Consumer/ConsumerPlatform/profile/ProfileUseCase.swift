@@ -10,13 +10,16 @@ import RxSwift
 import ConsumerDomain
 //TODO: потом убрать ProfileGRPC после замены на entity
 import ProfileGRPC
+import ObjectstorageGRPC
 
 public final class ProfileUseCase: ProfileUseCaseProtocol {
     
     private let profileRepository: ProfileRepositoryProtocol
+    private let objectStorageRepository: ObjectStorageRepositoryProtocol
 
-    public init(with profileRepository: ProfileRepositoryProtocol) {
+    public init(_ profileRepository: ProfileRepositoryProtocol, _ objectStorageRepository: ObjectStorageRepositoryProtocol) {
         self.profileRepository = profileRepository
+        self.objectStorageRepository = objectStorageRepository
     }
     
     public func getProfilePage() -> Observable<Void> {
@@ -58,4 +61,10 @@ public final class ProfileUseCase: ProfileUseCaseProtocol {
         return profileRepository.getAnimalsByProfile()
             .mapErrors(default: ProfileError.failedLoadAnimals)
     }
+    
+    public func uploadImageProfile(image: Data, type: ObjectstorageGRPC.MimeType) -> Observable<String> {
+        return objectStorageRepository.uploadImageProfile(image: image, type: type)
+            .mapErrors(default: ProfileError.failedUploadImage)
+    }
+ 
 }

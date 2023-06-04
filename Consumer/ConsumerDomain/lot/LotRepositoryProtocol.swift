@@ -33,4 +33,6 @@ public protocol LotRepositoryProtocol {
 
     // Получить информацию про объявление
     func getCardLot(byId: Int64) -> Observable<CardLot>
+    
+    func getOwnLots() -> Observable<([CoreGRPC.Lot], LotGRPC.LastLot)>
 }

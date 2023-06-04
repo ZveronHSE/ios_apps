@@ -64,4 +64,8 @@ public final class LotRemoteDataSource: LotDataSourceProtocol {
     public func getCardLot(request: CardLotRequest) -> Observable<CardLot> {
         return apigateway.callWithRetry(returnType: CardLot.self, requestBody: request, methodAlies: "cardLotGet")
     }
+    
+    public func getOwnLots(request: GetOwnLotsRequest) -> Observable<WaterfallResponse> {
+        return apigateway.callWithRetry(returnType: WaterfallResponse.self, requestBody: request, methodAlies: "lotGetOwns")
+    }
 }

@@ -23,6 +23,7 @@ struct ViewModelFactory {
     fileprivate static let objectStorageDataSource = ObjectStorageDataSource(api: apigateway)
 
     fileprivate static let orderDataSource =  OrderDataSourceMock(apigateway)
+    fileprivate static let chatRemoteDataSource = ChatRemoteDataSource(apigateway)
     // LOCAL_DATA_SOURCES
 
     
@@ -35,14 +36,17 @@ struct ViewModelFactory {
     fileprivate static let objectStorageRepository = ObjectStorageRepository(data: objectStorageDataSource)
     fileprivate static let orderRepository = OrderRepository(ds: orderDataSource)
 
+    fileprivate static let chatRepository = ChatRepository(remote: chatRemoteDataSource)
+    
     
     // USE_CASES
     fileprivate static let authUseCase = AuthUseCase(authRepository: authRepository)
     fileprivate static let waterfallUseCase = WaterfallUseCase(with: lotRepository, and: favoriteRepository, and: parameterRepository)
     fileprivate static let favoriteUseCase = FavoriteUseCase(with: favoriteRepository, and: lotRepository)
-    fileprivate static let profileUseCase = ProfileUseCase(with: profileRepository)
+    fileprivate static let profileUseCase = ProfileUseCase(profileRepository, objectStorageRepository)
     fileprivate static let createLotUseCase = CreateLotUseCase(with: lotRepository, with: parameterRepository, and: objectStorageRepository)
     fileprivate static let orderUseCase = OrderUseCase(rep: orderRepository)
+    fileprivate static let chatUseCase = ChatUseCase(with: chatRepository)
 
     // TODO: DEPRECATED
 
@@ -65,7 +69,7 @@ struct ViewModelFactory {
         case is EditProfileViewModel.Type: return (EditProfileViewModel(profileUseCase) as? T)!
             
           
-        case is AdsViewModel.Type: return (AdsViewModel() as? T)!
+        case is AdsViewModel.Type: return (AdsViewModel(createLotUseCase) as? T)!
         case is AddingLotViewModel.Type: return (AddingLotViewModel(createLotUseCase) as? T)!
         case is AddingLotTypeViewModel.Type: return (AddingLotTypeViewModel(createLotUseCase) as? T)!
         case is CategoryTypeNestedViewModel.Type: return (CategoryTypeNestedViewModel(createLotUseCase) as? T)!
@@ -76,9 +80,14 @@ struct ViewModelFactory {
         case is AddingLotPriceViewModel.Type: return (AddingLotPriceViewModel() as? T)!
             
         case is AddingLotAddressViewModel.Type: return (AddingLotAddressViewModel(createLotUseCase) as? T)!
+            
+        case is ChatListViewModel.Type: return (ChatListViewModel(chatUseCase, profileUseCase) as? T)!
+        case is ChatMessageViewModel.Type: return (ChatMessageViewModel(chatUseCase) as? T)!
 
         case is OrderViewModel.Type: return (OrderViewModel(orderUseCase, profileUseCase) as? T)!
         
+        case is CardLotViewModel.Type: return (CardLotViewModel(chatUseCase, profileUseCase) as? T)!
+            
         default:
             fatalError("Not implemented")
         }

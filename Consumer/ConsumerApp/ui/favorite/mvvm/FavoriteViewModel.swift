@@ -19,7 +19,7 @@ public class FavoriteViewModel: ViewModelType {
 
     private let animalItems: BehaviorRelay<[CoreGRPC.Lot]?> = BehaviorRelay(value: nil)
     private let goodsItems: BehaviorRelay<[CoreGRPC.Lot]?> = BehaviorRelay(value: nil)
-    private let profileItems: BehaviorRelay<[ProfileSummary]?> = BehaviorRelay(value: nil)
+    private let profileItems: BehaviorRelay<[FavoritesGRPC.ProfileSummary]?> = BehaviorRelay(value: nil)
     private let items: PublishSubject<FavoriteSectionModel> = PublishSubject()
 
     public struct Input {

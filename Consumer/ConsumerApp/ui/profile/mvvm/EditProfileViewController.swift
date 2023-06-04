@@ -120,7 +120,7 @@ class EditProfileViewController: UIViewControllerWithAuth {
         textFieldName.text = profileInfo.name
         textFieldSurname.text = profileInfo.surname
         textFieldCity.text = profileInfo.address.town
-        self.imageUser.kf.setImage(with: URL(string: "https://mirpozitiva.ru/wp-content/uploads/2019/11/1472042978_32.jpg"))
+        self.imageUser.kf.setImage(with: URL(string: profileInfo.imageUrl))
         
     }
     
@@ -172,9 +172,11 @@ class EditProfileViewController: UIViewControllerWithAuth {
                 ))
             self.viewModel.setProfileInfo(with: info)
             self.closure?(info)
+        }).disposed(by: disposeBag)
+
+        viewModel.result.subscribe(onNext: {_ in
             self.navigationController?.popViewController(animated: true)
         }).disposed(by: disposeBag)
-        
         
         imageBtn.rx.tap.bind(onNext: {
             let provider = CameraProvider(delegate: self)
@@ -190,6 +192,10 @@ class EditProfileViewController: UIViewControllerWithAuth {
         closeBtn.rx.tap.bind(onNext: {
             self.navigationController?.popViewController(animated: true)
         }).disposed(by: disposeBag)
+        
+        viewModel.imageURL.subscribe(onNext: { newImageUrl in
+            self.profileInfo.imageUrl = newImageUrl
+        }).disposed(by: disposeBag)
     }
     
 }
@@ -204,6 +210,7 @@ extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigati
         // здесь нужно будет добавить обработку незагруженной фотки
         guard let image = image else { return }
         imageBtn.setImage(image, for: .normal)
+        viewModel.uploadImage(image: image)
         picker.dismiss(animated: true, completion: nil)
     }
 }

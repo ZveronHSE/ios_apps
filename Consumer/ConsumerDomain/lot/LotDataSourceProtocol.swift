@@ -25,4 +25,7 @@ public protocol LotDataSourceProtocol {
 
     // Получить информацию про объявление
     func getCardLot(request: CardLotRequest) -> Observable<CardLot>
+    
+    // Получить список своих объявлений
+    func getOwnLots(request: GetOwnLotsRequest) -> Observable<WaterfallResponse>
 }

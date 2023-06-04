@@ -11,4 +11,6 @@ import ObjectstorageGRPC
 
 public protocol ObjectStorageRepositoryProtocol {
     func uploadImage(image: Data, type: MimeType) -> Observable<String>
+    
+    func uploadImageProfile(image: Data, type: MimeType) -> Observable<String>
 }

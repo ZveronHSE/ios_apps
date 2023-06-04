@@ -8,9 +8,14 @@
 import UIKit
 import RxSwift
 import LotGRPC
+import ChatGRPC
+import CoreGRPC
+import ConsumerDomain
+import Cosmos
 
 class CardLotViewController: UIViewController {
 
+    private let viewModel = ViewModelFactory.get(CardLotViewModel.self)
     private let disposeBag: DisposeBag = DisposeBag()
     private var isConfigured: Bool = false
     private var phoneNumber: String!
@@ -131,6 +136,59 @@ class CardLotViewController: UIViewController {
         text.sizeToFit()
         return text
     }()
+    
+    private var viewProfile: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Color1.gray2
+        view.layer.cornerRadius = 24
+        return view
+    }()
+    
+    private let ratingUser: CosmosView = {
+        let view = CosmosView()
+        view.settings.updateOnTouch = false
+        view.settings.totalStars = 5
+        view.settings.starSize = 20
+        view.settings.fillMode = .half
+        view.settings.starMargin = 3.5
+
+        view.settings.filledImage = Icon.star
+        view.settings.filledBorderColor = .clear
+        view.settings.filledBorderWidth = 0
+
+        view.settings.emptyImage = Icon.starEmpty
+        view.settings.emptyBorderWidth = 0
+        
+        view.settings.emptyBorderColor = .clear
+
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private var nameUser: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.font = Font.robotoMedium17
+        label.textColor = Color1.black
+        label.sizeToFit()
+        return label
+    }()
+    
+    private var imageUser: UIImageView = {
+        let imgView = UIImageView()
+        imgView.layer.masksToBounds = false
+        imgView.clipsToBounds = true
+        imgView.layer.cornerRadius = 32
+        imgView.contentMode = .scaleAspectFill
+        imgView.translatesAutoresizingMaskIntoConstraints = false
+        imgView.backgroundColor = .gray
+        return imgView
+    }()
+    
 
     private var priceLot: UILabel = {
         let label = UILabel()
@@ -177,19 +235,24 @@ class CardLotViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    private var lot: CardLot!
+    private var profileInfo: ProfileInfo!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         layout()
         bindView()
+        viewModel.loadProfileInfo()
     }
+    
 
     let navBtn = NavigationButton.close.button
 
     func layout() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navBtn)
 
-        self.view.backgroundColor = Color.backgroundScreen.color
+        self.view.backgroundColor = Color1.background
         view.addSubview(scrollView)
         scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         scrollView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
@@ -261,9 +324,35 @@ class CardLotViewController: UIViewController {
         descriptionLot.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -16).isActive = true
         descriptionLot.topAnchor.constraint(equalTo: self.titleDescription.bottomAnchor, constant: 8).isActive = true
 
+        
+        self.contentView.addSubview(viewProfile)
+        viewProfile.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 16).isActive = true
+        viewProfile.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -16).isActive = true
+        viewProfile.topAnchor.constraint(equalTo: self.descriptionLot.bottomAnchor, constant: 20).isActive = true
+        viewProfile.heightAnchor.constraint(equalToConstant: 95).isActive = true
+        
+        self.contentView.addSubview(imageUser)
+        imageUser.leftAnchor.constraint(equalTo: self.viewProfile.leftAnchor, constant: 16).isActive = true
+        imageUser.topAnchor.constraint(equalTo: self.viewProfile.topAnchor, constant: 16).isActive = true
+        imageUser.widthAnchor.constraint(equalToConstant: 64).isActive = true
+        imageUser.heightAnchor.constraint(equalToConstant: 64).isActive = true
+        
+        self.contentView.addSubview(nameUser)
+        nameUser.leftAnchor.constraint(equalTo: self.imageUser.rightAnchor, constant: 8).isActive = true
+        nameUser.topAnchor.constraint(equalTo: self.viewProfile.topAnchor, constant: 25).isActive = true
+        nameUser.rightAnchor.constraint(equalTo: self.viewProfile.rightAnchor, constant: -16).isActive = true
+        
+        self.contentView.addSubview(ratingUser)
+        ratingUser.leftAnchor.constraint(equalTo: self.imageUser.rightAnchor, constant: 8).isActive = true
+        ratingUser.topAnchor.constraint(equalTo: self.nameUser.bottomAnchor, constant: 5).isActive = true
+        ratingUser.rightAnchor.constraint(equalTo: self.viewProfile.rightAnchor, constant: -16).isActive = true
+        
+        
+        
+        
         self.contentView.addSubview(priceLot)
         priceLot.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 16).isActive = true
-        priceLot.topAnchor.constraint(equalTo: self.descriptionLot.bottomAnchor, constant: 20).isActive = true
+        priceLot.topAnchor.constraint(equalTo: self.viewProfile.bottomAnchor, constant: 20).isActive = true
 
         self.contentView.addSubview(phoneButton)
         phoneButton.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 16).isActive = true
@@ -303,9 +392,53 @@ class CardLotViewController: UIViewController {
                 ]
             )
         }).disposed(by: disposeBag)
+        
+        chatButton.rx.tap.bind(onNext: {
+            // нажатие на кнопку написать и переход к чату
+            
+            let tabbarVC = self.presentingViewController as! TabBarViewController
+            let chatListVC = tabbarVC.viewControllers?.first(where: { $0.children.first is ChatListViewController }) as? UINavigationController
+            
+            tabbarVC.selectedViewController = chatListVC
+            
+            
+            let messageVC = ChatMessageViewController()
+            
+            
+            let seller =  self.lot.seller
+            
+//            let profileInfo = ProfileInfo(id: UInt64(seller.id), name: seller.name, surname: seller.surname, imageUrl: "seller.imageURL", rating: seller.rating, address: Address(region: "Москва", town: "Москва", longitude: 13, latitude: 13))
+            
+            let chat = ChatGRPC.Chat.with({
+                $0.interlocutorSummary.id = UInt64(seller.id)
+                $0.interlocutorSummary.name = seller.name
+                $0.interlocutorSummary.surname = seller.surname
+                $0.interlocutorSummary.imageURL = seller.imageURL
+                $0.messages = []
+                $0.lots = [CoreGRPC.Lot.with({
+                    $0.id = self.lot.id
+                })]
+            })
+            
+            
+            messageVC.setup(chat, self.profileInfo)
+            messageVC.hidesBottomBarWhenPushed = true
+            
+            
+            chatListVC?.pushViewController(messageVC, animated: false)
+            self.dismiss(animated: true)
+        }).disposed(by: disposeBag)
+        
+        viewModel.profileInfo
+            .subscribe(onNext: {
+                self.profileInfo = $0
+            }).disposed(by: disposeBag)
+        
+        
     }
 
     func setup(with lot: CardLot) {
+        self.lot = lot
         if isConfigured { return }
         isConfigured.toggle()
         self.phoneNumber = lot.contact.channelLink.phone
@@ -334,6 +467,11 @@ class CardLotViewController: UIViewController {
 
         self.labelCountLikes.text = String(lot.statistics.favorite)
         self.labelCountWatches.text = String(lot.statistics.view)
+        let seller = lot.seller
+        self.nameUser.text = seller.name + " " + seller.surname
+        self.imageUser.kf.setImage(with: URL(string: seller.imageURL))
+        // обратно вернуть когда бек сделает
+        self.ratingUser.rating = 4.0//seller.rating
     }
 
     override func viewDidLayoutSubviews() {

@@ -13,6 +13,7 @@ import ZveronSupport
 public final class OrderRepository: OrderRepositoryProtocol {
     private let source: OrderDataSourceProtocol
     private var stashedLastOrderId: Int?
+    private var isFetching: Bool = false
     private let cacheOrder = Cache<Int, Order>(entryLifetime: .minutes(value: 5))
 
     public init(with source: OrderDataSourceProtocol) { self.source = source }
@@ -22,12 +23,15 @@ public final class OrderRepository: OrderRepositoryProtocol {
         sort: OrderSortingType,
         initData: Bool
     ) -> Observable<[OrderPreview]> {
+        if isFetching { return .just([]) }
         if initData { stashedLastOrderId = nil }
+        isFetching.toggle()
 
         return source.getWaterfall(size: 30, lastOrderId: stashedLastOrderId, filters: filters, sort: sort)
             .do(onNext: { orders in
             guard let lastOrderId = orders.last?.id else { return }
             self.stashedLastOrderId = lastOrderId
+            self.isFetching.toggle()
         })
     }
 

@@ -13,11 +13,11 @@ import CoreGRPC
 
 public final class LotRepository: LotRepositoryProtocol {
     private let remote: LotDataSourceProtocol
-
+    
     public init(remote: LotDataSourceProtocol) {
         self.remote = remote
     }
-
+    
     public func getWaterfall(
         pageSize: Int32,
         query: String?,
@@ -34,24 +34,31 @@ public final class LotRepository: LotRepositoryProtocol {
         }
         query.flatMap { request.query = $0 }
         categoryId.flatMap { request.categoryID = $0 }
-
+        
         return remote.getWaterfall(request: request).map { ($0.lots, $0.lastLot) }
     }
-
+    
     public func createLot(lot: CreateLot) -> Observable<CardLot> {
         return remote.createLot(lot: lot)
     }
-
+    
     public func editLot(request: EditLotRequest) -> Observable<CardLot> {
         fatalError("not implemented")
     }
-
+    
     public func closeLot(request: CloseLotRequest) -> Observable<Void> {
         fatalError("not implemented")
     }
-
+    
     public func getCardLot(byId id: Int64) -> Observable<CardLot> {
         let request = CardLotRequest.with { $0.id = id }
         return remote.getCardLot(request: request)
+    }
+    
+    public func getOwnLots() -> Observable<([CoreGRPC.Lot], LotGRPC.LastLot)> {
+        let request = GetOwnLotsRequest.with({
+            $0.onlyActive = true
+        })
+        return remote.getOwnLots(request: request).map { ($0.lots, $0.lastLot) }
     }
 }

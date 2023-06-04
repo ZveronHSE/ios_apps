@@ -56,7 +56,7 @@ class ChatMessageViewCell: UICollectionViewCell {
     
     var messageTextView: UITextView = {
         let textView = UITextView()
-        textView.font = Font.robotoRegular16
+        textView.font = UIFont.systemFont(ofSize: 16)
         textView.backgroundColor = UIColor.clear
         textView.isScrollEnabled = false
         textView.isEditable = false
